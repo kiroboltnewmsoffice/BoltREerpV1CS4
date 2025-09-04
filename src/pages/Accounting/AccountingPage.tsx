@@ -11,13 +11,13 @@ import {
   TrendingUp,
   Download,
   Eye,
-  Edit,
-  MoreHorizontal
+  Edit
 } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
 import StatsCard from '../../components/Dashboard/StatsCard';
 import AddTransactionModal from '../../components/Modals/AddTransactionModal';
 import ViewTransactionModal from '../../components/Modals/ViewTransactionModal';
+import DropdownMenu from '../../components/DropdownMenu';
 import { formatCurrency, formatCurrencyShort } from '../../utils/currency';
 import { format } from 'date-fns';
 
@@ -140,19 +140,60 @@ const AccountingPage: React.FC = () => {
     const transaction = transactions.find(t => t.id === transactionId);
     if (transaction) {
       const options = [
-        'Print Receipt',
-        'Send Receipt Email',
-        'Refund Transaction',
-        'Add Note',
-        'Transaction History',
-        'Duplicate Transaction',
-        'Archive Transaction'
+        {
+          label: 'Print Receipt',
+          onClick: () => {
+            toast.success(`Printing receipt for transaction: ${transaction.id.toUpperCase()}`);
+            // TODO: Generate and print receipt
+          }
+        },
+        {
+          label: 'Send Receipt Email',
+          onClick: () => {
+            toast.success(`Sending receipt email for transaction: ${transaction.id.toUpperCase()}`);
+            // TODO: Send email with receipt
+          }
+        },
+        {
+          label: 'Refund Transaction',
+          onClick: () => {
+            toast.success(`Processing refund for transaction: ${transaction.id.toUpperCase()}`);
+            // TODO: Process refund
+          }
+        },
+        {
+          label: 'Add Note',
+          onClick: () => {
+            toast.success(`Opening notes for transaction: ${transaction.id.toUpperCase()}`);
+            // TODO: Open notes modal
+          }
+        },
+        {
+          label: 'Transaction History',
+          onClick: () => {
+            toast.success(`Opening history for transaction: ${transaction.id.toUpperCase()}`);
+            // TODO: Open history modal
+          }
+        },
+        {
+          label: 'Duplicate Transaction',
+          onClick: () => {
+            toast.success(`Duplicating transaction: ${transaction.id.toUpperCase()}`);
+            // TODO: Duplicate transaction
+          }
+        },
+        {
+          label: 'Archive Transaction',
+          onClick: () => {
+            toast.success(`Archiving transaction: ${transaction.id.toUpperCase()}`);
+            // TODO: Archive transaction
+          }
+        }
       ];
-      const selectedOption = window.prompt(`Select an option for transaction ${transaction.id.toUpperCase()}:\n${options.map((opt, i) => `${i + 1}. ${opt}`).join('\n')}`);
-      if (selectedOption) {
-        toast.success(`${options[parseInt(selectedOption) - 1] || 'Option'} selected for transaction ${transaction.id.toUpperCase()}`);
-      }
+      
+      return options;
     }
+    return [];
   };
 
   return (
@@ -274,7 +315,7 @@ const AccountingPage: React.FC = () => {
             </select>
             
             <button 
-              onClick={() => toast.info('Advanced filters and export options would be available here')}
+              onClick={() => toast('Advanced filters and export options would be available here')}
               className="p-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
               type="button"
               title="More Options"
@@ -397,13 +438,10 @@ const AccountingPage: React.FC = () => {
                       >
                         <Receipt className="h-4 w-4" />
                       </button>
-                      <button 
-                        onClick={() => handleMoreTransactionOptions(transaction.id)}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
-                        type="button"
-                      >
-                        <MoreHorizontal className="h-4 w-4" />
-                      </button>
+                      <DropdownMenu
+                        options={handleMoreTransactionOptions(transaction.id)}
+                        buttonClassName="text-gray-400 hover:text-gray-600 transition-colors"
+                      />
                     </div>
                   </td>
                 </tr>

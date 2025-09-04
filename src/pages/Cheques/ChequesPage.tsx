@@ -105,19 +105,60 @@ const ChequesPage: React.FC = () => {
     const transaction = transactions.find(t => t.id === transactionId);
     if (transaction && transaction.chequeDetails) {
       const options = [
-        'Send to Bank',
-        'Mark as Bounced',
-        'Cancel Cheque',
-        'Print Cheque Copy',
-        'Add Follow-up Note',
-        'Contact Customer',
-        'Cheque History'
+        {
+          label: 'Send to Bank',
+          onClick: () => {
+            toast.success(`Sending cheque ${transaction.chequeDetails!.chequeNumber} to bank`);
+            // TODO: Implement bank submission
+          }
+        },
+        {
+          label: 'Mark as Bounced',
+          onClick: () => {
+            toast.error(`Marking cheque ${transaction.chequeDetails!.chequeNumber} as bounced`);
+            // TODO: Update cheque status
+          }
+        },
+        {
+          label: 'Cancel Cheque',
+          onClick: () => {
+            toast.success(`Cancelling cheque ${transaction.chequeDetails!.chequeNumber}`);
+            // TODO: Cancel cheque
+          }
+        },
+        {
+          label: 'Print Cheque Copy',
+          onClick: () => {
+            toast.success(`Printing copy of cheque ${transaction.chequeDetails!.chequeNumber}`);
+            // TODO: Generate PDF and print
+          }
+        },
+        {
+          label: 'Add Follow-up Note',
+          onClick: () => {
+            toast.success(`Opening notes for cheque ${transaction.chequeDetails!.chequeNumber}`);
+            // TODO: Open notes modal
+          }
+        },
+        {
+          label: 'Contact Customer',
+          onClick: () => {
+            toast.success(`Opening contact options for cheque ${transaction.chequeDetails!.chequeNumber}`);
+            // TODO: Open contact modal
+          }
+        },
+        {
+          label: 'Cheque History',
+          onClick: () => {
+            toast.success(`Opening history for cheque ${transaction.chequeDetails!.chequeNumber}`);
+            // TODO: Open history modal
+          }
+        }
       ];
-      const selectedOption = window.prompt(`Select an option for cheque ${transaction.chequeDetails.chequeNumber}:\n${options.map((opt, i) => `${i + 1}. ${opt}`).join('\n')}`);
-      if (selectedOption) {
-        toast.success(`${options[parseInt(selectedOption) - 1] || 'Option'} selected for cheque ${transaction.chequeDetails.chequeNumber}`);
-      }
+      
+      return options;
     }
+    return [];
   };
 
   return (
@@ -402,13 +443,10 @@ const ChequesPage: React.FC = () => {
                         >
                           <Download className="h-4 w-4" />
                         </button>
-                        <button 
-                          onClick={() => handleMoreChequeOptions(transaction.id)}
-                          className="text-gray-400 hover:text-gray-600 transition-colors"
-                          type="button"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                        </button>
+                        <DropdownMenu
+                          options={handleMoreChequeOptions(transaction.id)}
+                          buttonClassName="text-gray-400 hover:text-gray-600 transition-colors"
+                        />
                       </div>
                     </td>
                   </tr>

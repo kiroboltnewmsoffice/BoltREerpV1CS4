@@ -11,11 +11,11 @@ import {
   CheckCircle,
   XCircle,
   Eye,
-  Edit,
-  MoreHorizontal
+  Edit
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import StatsCard from '../../components/Dashboard/StatsCard';
+import DropdownMenu from '../../components/DropdownMenu';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import AddUserModal from '../../components/Modals/AddUserModal';
@@ -135,6 +135,66 @@ const UsersPage: React.FC = () => {
     return role.replace('_', ' ').split(' ').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');
+  };
+
+  const handleMoreUserOptions = (userId: string) => {
+    const user = users.find(u => u.id === userId);
+    if (user) {
+      const options = [
+        {
+          label: 'Reset Password',
+          onClick: () => {
+            toast.success(`Password reset initiated for ${user.name}`);
+            // TODO: Implement password reset
+          }
+        },
+        {
+          label: 'Change Permissions',
+          onClick: () => {
+            toast.success(`Opening permissions editor for ${user.name}`);
+            // TODO: Open permissions modal
+          }
+        },
+        {
+          label: 'View Activity Log',
+          onClick: () => {
+            toast.success(`Opening activity log for ${user.name}`);
+            // TODO: Open activity log modal
+          }
+        },
+        {
+          label: 'Send Notification',
+          onClick: () => {
+            toast.success(`Opening notification composer for ${user.name}`);
+            // TODO: Open notification modal
+          }
+        },
+        {
+          label: 'Export User Data',
+          onClick: () => {
+            toast.success(`Exporting data for ${user.name}`);
+            // TODO: Export user data
+          }
+        },
+        {
+          label: 'Suspend Account',
+          onClick: () => {
+            toast.error(`Suspending account for ${user.name}`);
+            // TODO: Suspend user account
+          }
+        },
+        {
+          label: 'Delete User',
+          onClick: () => {
+            toast.error(`Deleting user ${user.name}`);
+            // TODO: Delete user with confirmation
+          }
+        }
+      ];
+      
+      return options;
+    }
+    return [];
   };
 
   return (
@@ -355,27 +415,10 @@ const UsersPage: React.FC = () => {
                       >
                         <Edit className="h-4 w-4" />
                       </button>
-                      <button 
-                        onClick={() => {
-                          const options = [
-                            'Reset Password',
-                            'Change Permissions',
-                            'View Activity Log',
-                            'Send Notification',
-                            'Export User Data',
-                            'Suspend Account',
-                            'Delete User'
-                          ];
-                          const selectedOption = window.prompt(`Select an option for ${user.name}:\n${options.map((opt, i) => `${i + 1}. ${opt}`).join('\n')}`);
-                          if (selectedOption) {
-                            toast.success(`${options[parseInt(selectedOption) - 1] || 'Option'} selected for ${user.name}`);
-                          }
-                        }}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
-                        type="button"
-                      >
-                        <MoreHorizontal className="h-4 w-4" />
-                      </button>
+                      <DropdownMenu
+                        options={handleMoreUserOptions(user.id)}
+                        buttonClassName="text-gray-400 hover:text-gray-600 transition-colors"
+                      />
                     </div>
                   </td>
                 </tr>
