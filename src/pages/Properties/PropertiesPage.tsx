@@ -15,11 +15,12 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
+import { Property } from '../../types';
 import StatsCard from '../../components/Dashboard/StatsCard';
 import AddPropertyModal from '../../components/Modals/AddPropertyModal';
 import ViewPropertyModal from '../../components/Modals/ViewPropertyModal';
 import EditPropertyModal from '../../components/Modals/EditPropertyModal';
-import { formatCurrency, formatCurrencyShort } from '../../utils/currency';
+import { formatCurrencyShort } from '../../utils/currency';
 
 const PropertiesPage: React.FC = () => {
   const { properties, units } = useDataStore();
@@ -31,15 +32,30 @@ const PropertiesPage: React.FC = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+
+  // Handle case where data might not be loaded yet
+  if (!properties || !units) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading properties...</p>
+        </div>
+      </div>
+    );
+  }
+
   const handleAdvancedFilters = () => {
     setShowAdvancedFilters(!showAdvancedFilters);
-    toast.info('Advanced filters ' + (showAdvancedFilters ? 'hidden' : 'shown'));
+    toast.success('Advanced filters ' + (showAdvancedFilters ? 'hidden' : 'shown'));
   };
 
-  // Filter properties
-  const filteredProperties = properties.filter(property => {
-    const matchesSearch = property.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         property.location.toLowerCase().includes(searchTerm.toLowerCase());
+  // Filter properties with safety check
+  const filteredProperties = (properties || []).filter(property => {
+    if (!property) return false;
+    const matchesSearch = (property.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (property.location || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = typeFilter === 'all' || property.type === typeFilter;
     const matchesStatus = statusFilter === 'all' || property.status === statusFilter;
     return matchesSearch && matchesType && matchesStatus;
@@ -47,12 +63,12 @@ const PropertiesPage: React.FC = () => {
 
   const formatCurrency = (amount: number) => `EGP ${amount.toLocaleString()}`;
 
-  // Calculate stats
-  const totalProperties = properties.length;
-  const totalUnits = properties.reduce((sum, p) => sum + p.totalUnits, 0);
-  const availableUnits = properties.reduce((sum, p) => sum + p.availableUnits, 0);
-  const soldUnits = properties.reduce((sum, p) => sum + p.soldUnits, 0);
-  const totalValue = units.reduce((sum, u) => sum + u.price, 0);
+  // Calculate stats with safety checks
+  const totalProperties = (properties || []).length;
+  const totalUnits = (properties || []).reduce((sum, p) => sum + (p?.totalUnits || 0), 0);
+  const availableUnits = (properties || []).reduce((sum, p) => sum + (p?.availableUnits || 0), 0);
+  const soldUnits = (properties || []).reduce((sum, p) => sum + (p?.soldUnits || 0), 0);
+  const totalValue = (units || []).reduce((sum, u) => sum + (u?.price || 0), 0);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -80,23 +96,27 @@ const PropertiesPage: React.FC = () => {
   };
 
   const handleViewProperty = (propertyId: string) => {
-    const property = properties.find(p => p.id === propertyId);
+    const property = (properties || []).find(p => p?.id === propertyId);
     if (property) {
       setSelectedProperty(property);
       setShowViewModal(true);
+    } else {
+      toast.error('Property not found');
     }
   };
 
   const handleEditProperty = (propertyId: string) => {
-    const property = properties.find(p => p.id === propertyId);
+    const property = (properties || []).find(p => p?.id === propertyId);
     if (property) {
       setSelectedProperty(property);
       setShowEditModal(true);
+    } else {
+      toast.error('Property not found');
     }
   };
 
   const handleMoreOptions = (propertyId: string) => {
-    const property = properties.find(p => p.id === propertyId);
+    const property = (properties || []).find(p => p?.id === propertyId);
     if (property) {
       const options = [
         'View Units',
@@ -111,6 +131,8 @@ const PropertiesPage: React.FC = () => {
       if (selectedOption) {
         toast.success(`${options[parseInt(selectedOption) - 1] || 'Option'} selected for ${property.name}`);
       }
+    } else {
+      toast.error('Property not found');
     }
   };
 
