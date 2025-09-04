@@ -280,19 +280,25 @@ const ProcurementPage: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        <button className="text-gray-400 hover:text-blue-600 transition-colors">
+                        <button 
                           type="button"
                           onClick={() => toast(`Viewing purchase order: ${order.orderNumber}`)}
+                          className="text-gray-400 hover:text-blue-600 transition-colors"
+                        >
                           <Eye className="h-4 w-4" />
                         </button>
-                        <button className="text-gray-400 hover:text-green-600 transition-colors">
+                        <button 
                           type="button"
                           onClick={() => toast(`Edit purchase order modal would open for: ${order.orderNumber}`)}
+                          className="text-gray-400 hover:text-green-600 transition-colors"
+                        >
                           <Edit className="h-4 w-4" />
                         </button>
-                        <button className="text-gray-400 hover:text-purple-600 transition-colors">
+                        <button 
                           type="button"
                           onClick={() => toast.success(`Downloading purchase order: ${order.orderNumber}`)}
+                          className="text-gray-400 hover:text-purple-600 transition-colors"
+                        >
                           <Download className="h-4 w-4" />
                         </button>
                       </div>

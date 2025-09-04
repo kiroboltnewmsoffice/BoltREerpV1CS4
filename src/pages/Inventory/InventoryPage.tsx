@@ -11,13 +11,13 @@ import {
   TrendingUp,
   Eye,
   Edit,
-  BarChart3
+  BarChart3,
+  MoreHorizontal
 } from 'lucide-react';
 import StatsCard from '../../components/Dashboard/StatsCard';
 import AddInventoryItemModal from '../../components/Modals/AddInventoryItemModal';
 import ViewInventoryItemModal from '../../components/Modals/ViewInventoryItemModal';
 import EditInventoryItemModal from '../../components/Modals/EditInventoryItemModal';
-import { formatCurrency } from '../../utils/currency';
 
 const InventoryPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -96,8 +96,6 @@ const InventoryPage: React.FC = () => {
     const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
     return matchesSearch && matchesCategory && matchesStatus;
   });
-
-  const formatCurrency = (amount: number) => `EGP ${amount.toLocaleString()}`;
 
   const getStatusColor = (status: string) => {
     switch (status) {
