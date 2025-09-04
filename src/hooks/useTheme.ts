@@ -8,10 +8,28 @@ export const useTheme = () => {
     
     const stored = localStorage.getItem('theme') as Theme;
     if (stored && (stored === 'light' || stored === 'dark')) {
+      // Apply stored theme immediately
+      const root = document.documentElement;
+      if (stored === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
       return stored;
     }
     
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const systemTheme = prefersDark ? 'dark' : 'light';
+    
+    // Apply system theme immediately
+    const root = document.documentElement;
+    if (systemTheme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    
+    return systemTheme;
   });
 
   useEffect(() => {

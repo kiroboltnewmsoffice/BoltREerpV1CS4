@@ -45,19 +45,18 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div className={theme}>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route
-              path="/*"
-              element={
-                <ProtectedRoute>
-                  <MainLayout />
-                </ProtectedRoute>
-              }
-            >
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <MainLayout />
+              </ProtectedRoute>
+            }
+          >
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="crm" element={<CRMDashboard />} />
               <Route path="properties" element={<PropertiesPage />} />
@@ -94,7 +93,6 @@ function App() {
             },
           }}
         />
-      </div>
     </ErrorBoundary>
   );
 }
