@@ -18,6 +18,8 @@ import {
 import StatsCard from '../../components/Dashboard/StatsCard';
 import AddSupplierModal from '../../components/Modals/AddSupplierModal';
 import AddPurchaseOrderModal from '../../components/Modals/AddPurchaseOrderModal';
+import ViewPurchaseOrderModal from '../../components/Modals/ViewPurchaseOrderModal';
+import EditPurchaseOrderModal from '../../components/Modals/EditPurchaseOrderModal';
 import { formatCurrency } from '../../utils/currency';
 
 const ProcurementPage: React.FC = () => {
@@ -27,6 +29,8 @@ const ProcurementPage: React.FC = () => {
   const [showAddPurchaseOrderModal, setShowAddPurchaseOrderModal] = useState(false);
   const [showViewSupplierModal, setShowViewSupplierModal] = useState(false);
   const [showEditSupplierModal, setShowEditSupplierModal] = useState(false);
+  const [showViewPurchaseOrderModal, setShowViewPurchaseOrderModal] = useState(false);
+  const [showEditPurchaseOrderModal, setShowEditPurchaseOrderModal] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<any>(null);
   const [selectedPurchaseOrder, setSelectedPurchaseOrder] = useState<any>(null);
 
@@ -114,6 +118,65 @@ const ProcurementPage: React.FC = () => {
       case 'draft': return Package;
       case 'cancelled': return AlertTriangle;
       default: return Clock;
+    }
+  };
+
+  // Purchase Order handlers
+  const transformOrderForModal = (order: any) => {
+    return {
+      ...order,
+      supplierContact: '', // Add default values for missing properties
+      deliveryAddress: '',
+      items: order.items.map((item: any) => ({
+        ...item,
+        name: item.description, // Map description to name for modal compatibility
+        total: item.totalPrice || item.total || (item.quantity * item.unitPrice)
+      }))
+    };
+  };
+
+  const handleViewPurchaseOrder = (orderId: string) => {
+    const order = purchaseOrders.find(o => o.id === orderId);
+    if (order) {
+      setSelectedPurchaseOrder(transformOrderForModal(order));
+      setShowViewPurchaseOrderModal(true);
+    }
+  };
+
+  const handleEditPurchaseOrder = (orderId: string) => {
+    const order = purchaseOrders.find(o => o.id === orderId);
+    if (order) {
+      setSelectedPurchaseOrder(transformOrderForModal(order));
+      setShowEditPurchaseOrderModal(true);
+    }
+  };
+
+  const handleDownloadPurchaseOrder = (orderId: string) => {
+    const order = purchaseOrders.find(o => o.id === orderId);
+    if (order) {
+      // Generate download content (you can enhance this)
+      const content = `
+Purchase Order: ${order.orderNumber}
+Supplier: ${order.supplierName}
+Date: ${order.orderDate}
+Total: ${order.totalAmount} EGP
+Status: ${order.status}
+
+Items:
+${order.items.map(item => `- ${item.description} (Qty: ${item.quantity})`).join('\n')}
+      `.trim();
+      
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${order.orderNumber}-purchase-order.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      toast.success(`Downloaded purchase order: ${order.orderNumber}`);
     }
   };
 
@@ -282,21 +345,36 @@ const ProcurementPage: React.FC = () => {
                       <div className="flex items-center space-x-2">
                         <button 
                           type="button"
-                          onClick={() => toast(`Viewing purchase order: ${order.orderNumber}`)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('View button clicked for:', order.orderNumber);
+                            handleViewPurchaseOrder(order.id);
+                          }}
                           className="text-gray-400 hover:text-blue-600 transition-colors"
                         >
                           <Eye className="h-4 w-4" />
                         </button>
                         <button 
                           type="button"
-                          onClick={() => toast(`Edit purchase order modal would open for: ${order.orderNumber}`)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('Edit button clicked for:', order.orderNumber);
+                            handleEditPurchaseOrder(order.id);
+                          }}
                           className="text-gray-400 hover:text-green-600 transition-colors"
                         >
                           <Edit className="h-4 w-4" />
                         </button>
                         <button 
                           type="button"
-                          onClick={() => toast.success(`Downloading purchase order: ${order.orderNumber}`)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('Download button clicked for:', order.orderNumber);
+                            handleDownloadPurchaseOrder(order.id);
+                          }}
                           className="text-gray-400 hover:text-purple-600 transition-colors"
                         >
                           <Download className="h-4 w-4" />
@@ -352,21 +430,36 @@ const ProcurementPage: React.FC = () => {
                 
                 <div className="flex items-center space-x-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
                   <button 
-                    onClick={() => toast.success(`Creating order for ${supplier.name}`)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Create Order clicked for:', supplier.name);
+                      toast.success(`Creating order for ${supplier.name}`);
+                    }}
                     className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors text-sm"
                     type="button"
                   >
                     Create Order
                   </button>
                   <button 
-                    onClick={() => toast(`Viewing details for ${supplier.name}`)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('View supplier clicked for:', supplier.name);
+                      toast(`Viewing details for ${supplier.name}`);
+                    }}
                     className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
                     type="button"
                   >
                     <Eye className="h-4 w-4" />
                   </button>
                   <button 
-                    onClick={() => toast(`Editing ${supplier.name}`)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Edit supplier clicked for:', supplier.name);
+                      toast(`Editing ${supplier.name}`);
+                    }}
                     className="p-2 text-gray-400 hover:text-green-600 transition-colors"
                     type="button"
                   >
@@ -387,6 +480,23 @@ const ProcurementPage: React.FC = () => {
       <AddPurchaseOrderModal 
         isOpen={showAddPurchaseOrderModal} 
         onClose={() => setShowAddPurchaseOrderModal(false)} 
+      />
+
+      <ViewPurchaseOrderModal
+        isOpen={showViewPurchaseOrderModal}
+        onClose={() => setShowViewPurchaseOrderModal(false)}
+        order={selectedPurchaseOrder}
+      />
+
+      <EditPurchaseOrderModal
+        isOpen={showEditPurchaseOrderModal}
+        onClose={() => setShowEditPurchaseOrderModal(false)}
+        order={selectedPurchaseOrder}
+        onSave={(updatedOrder) => {
+          // Here you would typically update your data source
+          console.log('Purchase order updated:', updatedOrder);
+          setShowEditPurchaseOrderModal(false);
+        }}
       />
     </div>
   );
