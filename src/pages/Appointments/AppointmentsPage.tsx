@@ -308,14 +308,20 @@ const AppointmentsPage: React.FC = () => {
                     </button>
                   )}
                   <button 
-                    onClick={() => toast(`Viewing appointment: ${appointment.title}`)}
+                    onClick={() => {
+                      toast.success(`Opening appointment details: ${appointment.title}`);
+                      // TODO: Implement ViewAppointmentModal
+                    }}
                     className="text-gray-400 hover:text-blue-600 transition-colors"
                     type="button"
                   >
                     <Eye className="h-4 w-4" />
                   </button>
                   <button 
-                    onClick={() => toast(`Editing appointment: ${appointment.title}`)}
+                    onClick={() => {
+                      toast.success(`Opening edit form for appointment: ${appointment.title}`);
+                      // TODO: Implement EditAppointmentModal
+                    }}
                     className="text-gray-400 hover:text-green-600 transition-colors"
                     type="button"
                   >

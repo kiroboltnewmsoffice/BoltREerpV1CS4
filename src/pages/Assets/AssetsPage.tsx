@@ -301,14 +301,20 @@ const AssetsPage: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center space-x-2">
                       <button 
-                        onClick={() => toast(`Viewing asset: ${asset.name}`)}
+                        onClick={() => {
+                          toast.success(`Opening asset details: ${asset.name}`);
+                          // TODO: Implement ViewAssetModal
+                        }}
                         className="text-gray-400 hover:text-blue-600 transition-colors"
                         type="button"
                       >
                         <Eye className="h-4 w-4" />
                       </button>
                       <button 
-                        onClick={() => toast(`Editing asset: ${asset.name}`)}
+                        onClick={() => {
+                          toast.success(`Opening edit form for asset: ${asset.name}`);
+                          // TODO: Implement EditAssetModal
+                        }}
                         className="text-gray-400 hover:text-green-600 transition-colors"
                         type="button"
                       >

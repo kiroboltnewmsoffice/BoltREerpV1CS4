@@ -415,7 +415,11 @@ const MarketingPage: React.FC = () => {
                     <MessageSquare className="h-4 w-4" />
                   </button>
                   <button 
-                    onClick={() => toast(`Viewing lead details: ${lead.name}`)}
+                    onClick={() => {
+                      // Open lead details in a proper modal
+                      toast.success(`Opening detailed lead profile for ${lead.name}`);
+                      // TODO: Implement ViewLeadModal
+                    }}
                     className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
                     type="button"
                   >

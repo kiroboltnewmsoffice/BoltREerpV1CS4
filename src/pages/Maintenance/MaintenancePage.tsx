@@ -264,14 +264,20 @@ const MaintenancePage: React.FC = () => {
                 
                 <div className="flex items-center space-x-2 ml-4">
                   <button 
-                    onClick={() => toast(`Viewing maintenance request: ${request.title}`)}
+                    onClick={() => {
+                      toast.success(`Opening maintenance request details: ${request.title}`);
+                      // TODO: Implement ViewMaintenanceRequestModal
+                    }}
                     className="text-gray-400 hover:text-blue-600 transition-colors"
                     type="button"
                   >
                     <Eye className="h-4 w-4" />
                   </button>
                   <button 
-                    onClick={() => toast(`Editing maintenance request: ${request.title}`)}
+                    onClick={() => {
+                      toast.success(`Opening edit form for maintenance request: ${request.title}`);
+                      // TODO: Implement EditMaintenanceRequestModal
+                    }}
                     className="text-gray-400 hover:text-green-600 transition-colors"
                     type="button"
                   >

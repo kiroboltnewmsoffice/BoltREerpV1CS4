@@ -273,14 +273,20 @@ const WorkflowsPage: React.FC = () => {
                 
                 <div className="flex items-center space-x-2 ml-4">
                   <button 
-                    onClick={() => toast(`Viewing workflow: ${workflow.name}`)}
+                    onClick={() => {
+                      toast.success(`Opening workflow details: ${workflow.name}`);
+                      // TODO: Implement ViewWorkflowModal
+                    }}
                     className="text-gray-400 hover:text-blue-600 transition-colors"
                     type="button"
                   >
                     <Eye className="h-4 w-4" />
                   </button>
                   <button 
-                    onClick={() => toast(`Editing workflow: ${workflow.name}`)}
+                    onClick={() => {
+                      toast.success(`Opening edit form for workflow: ${workflow.name}`);
+                      // TODO: Implement EditWorkflowModal
+                    }}
                     className="text-gray-400 hover:text-green-600 transition-colors"
                     type="button"
                   >

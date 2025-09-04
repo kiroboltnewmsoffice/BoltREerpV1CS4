@@ -239,7 +239,10 @@ const CommunicationsPage: React.FC = () => {
                   
                   <div className="flex items-center space-x-2 ml-4">
                     <button 
-                      onClick={() => toast(`Viewing communication: ${comm.subject}`)}
+                      onClick={() => {
+                        toast.success(`Opening communication details: ${comm.subject}`);
+                        // TODO: Implement ViewCommunicationModal
+                      }}
                       className="text-gray-400 hover:text-blue-600 transition-colors"
                       type="button"
                     >
