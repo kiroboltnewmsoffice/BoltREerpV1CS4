@@ -18,12 +18,18 @@ import {
 import StatsCard from '../../components/Dashboard/StatsCard';
 import toast from 'react-hot-toast';
 import CreateWorkflowModal from '../../components/Modals/CreateWorkflowModal';
+import ViewWorkflowModal from '../../components/Modals/ViewWorkflowModal';
+import EditWorkflowModal from '../../components/Modals/EditWorkflowModal';
 
 const WorkflowsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [moduleFilter, setModuleFilter] = useState('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedWorkflow, setSelectedWorkflow] = useState<any>(null);
+  const [editingWorkflow, setEditingWorkflow] = useState<any>(null);
 
   // Sample workflows data
   const workflows = [
@@ -105,6 +111,23 @@ const WorkflowsPage: React.FC = () => {
   const activeWorkflows = workflows.filter(w => w.status === 'active').length;
   const totalSteps = workflows.reduce((sum, w) => sum + w.steps.length, 0);
   const avgStepsPerWorkflow = (totalSteps / totalWorkflows).toFixed(1);
+
+  // Modal handlers
+  const handleViewWorkflow = (workflow: typeof workflows[0]) => {
+    setSelectedWorkflow(workflow);
+    setShowViewModal(true);
+  };
+
+  const handleEditWorkflow = (workflow: typeof workflows[0]) => {
+    setEditingWorkflow(workflow);
+    setShowEditModal(true);
+  };
+
+  const handleSaveWorkflow = (updatedWorkflow: any) => {
+    console.log('Updated workflow:', updatedWorkflow);
+    toast.success('Workflow updated successfully!');
+    // In a real app, update the workflow in the data store
+  };
 
   const handleMoreWorkflowOptions = (workflowId: string) => {
     const workflow = workflows.find(w => w.id === workflowId);
@@ -273,20 +296,14 @@ const WorkflowsPage: React.FC = () => {
                 
                 <div className="flex items-center space-x-2 ml-4">
                   <button 
-                    onClick={() => {
-                      toast.success(`Opening workflow details: ${workflow.name}`);
-                      // TODO: Implement ViewWorkflowModal
-                    }}
+                    onClick={() => handleViewWorkflow(workflow)}
                     className="text-gray-400 hover:text-blue-600 transition-colors"
                     type="button"
                   >
                     <Eye className="h-4 w-4" />
                   </button>
                   <button 
-                    onClick={() => {
-                      toast.success(`Opening edit form for workflow: ${workflow.name}`);
-                      // TODO: Implement EditWorkflowModal
-                    }}
+                    onClick={() => handleEditWorkflow(workflow)}
                     className="text-gray-400 hover:text-green-600 transition-colors"
                     type="button"
                   >
@@ -310,6 +327,29 @@ const WorkflowsPage: React.FC = () => {
         isOpen={showCreateModal} 
         onClose={() => setShowCreateModal(false)} 
       />
+      
+      {selectedWorkflow && (
+        <ViewWorkflowModal
+          workflow={selectedWorkflow}
+          isOpen={showViewModal}
+          onClose={() => setShowViewModal(false)}
+        />
+      )}
+      
+      {editingWorkflow && (
+        <EditWorkflowModal
+          workflow={editingWorkflow}
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          onSave={(updatedWorkflow) => {
+            console.log('Updated workflow:', updatedWorkflow);
+            // TODO: Update workflow in the data store
+            toast.success('Workflow updated successfully');
+            setShowEditModal(false);
+            setEditingWorkflow(null);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -17,6 +17,8 @@ import StatsCard from '../../components/Dashboard/StatsCard';
 import toast from 'react-hot-toast';
 import SendEmailModal from '../../components/Modals/SendEmailModal';
 import SendSMSModal from '../../components/Modals/SendSMSModal';
+import ViewCommunicationModal from '../../components/Modals/ViewCommunicationModal';
+import EditCommunicationModal from '../../components/Modals/EditCommunicationModal';
 
 const CommunicationsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,6 +26,9 @@ const CommunicationsPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [showSMSModal, setShowSMSModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedCommunication, setSelectedCommunication] = useState<any>(null);
 
   // Sample communications data
   const communications = [
@@ -112,6 +117,23 @@ const CommunicationsPage: React.FC = () => {
   const emailCount = communications.filter(c => c.type === 'email').length;
   const smsCount = communications.filter(c => c.type === 'sms').length;
   const callCount = communications.filter(c => c.type === 'call').length;
+
+  // Modal handlers
+  const handleViewCommunication = (communication: typeof communications[0]) => {
+    setSelectedCommunication(communication);
+    setShowViewModal(true);
+  };
+
+  const handleEditCommunication = (communication: typeof communications[0]) => {
+    setSelectedCommunication(communication);
+    setShowEditModal(true);
+  };
+
+  const handleSaveCommunication = (updatedCommunication: any) => {
+    console.log('Updated communication:', updatedCommunication);
+    toast.success('Communication updated successfully!');
+    // In a real app, update the communication in the data store
+  };
 
   return (
     <div className="space-y-6">
@@ -239,17 +261,14 @@ const CommunicationsPage: React.FC = () => {
                   
                   <div className="flex items-center space-x-2 ml-4">
                     <button 
-                      onClick={() => {
-                        toast.success(`Opening communication details: ${comm.subject}`);
-                        // TODO: Implement ViewCommunicationModal
-                      }}
+                      onClick={() => handleViewCommunication(comm)}
                       className="text-gray-400 hover:text-blue-600 transition-colors"
                       type="button"
                     >
                       <Eye className="h-4 w-4" />
                     </button>
                     <button 
-                      onClick={() => toast.success(`Replying to: ${comm.subject}`)}
+                      onClick={() => handleEditCommunication(comm)}
                       className="text-gray-400 hover:text-green-600 transition-colors"
                       type="button"
                     >
@@ -278,6 +297,19 @@ const CommunicationsPage: React.FC = () => {
       <SendSMSModal 
         isOpen={showSMSModal} 
         onClose={() => setShowSMSModal(false)} 
+      />
+      
+      <ViewCommunicationModal
+        isOpen={showViewModal}
+        onClose={() => setShowViewModal(false)}
+        communication={selectedCommunication}
+      />
+      
+      <EditCommunicationModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        communication={selectedCommunication}
+        onSave={handleSaveCommunication}
       />
     </div>
   );

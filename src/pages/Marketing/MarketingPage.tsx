@@ -19,6 +19,9 @@ import StatsCard from '../../components/Dashboard/StatsCard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import toast from 'react-hot-toast';
 import CreateCampaignModal from '../../components/Modals/CreateCampaignModal';
+import ViewCampaignModal from '../../components/Modals/ViewCampaignModal';
+import EditCampaignModal from '../../components/Modals/EditCampaignModal';
+import ViewLeadModal from '../../components/Modals/ViewLeadModal';
 import { formatCurrency } from '../../utils/currency';
 
 const MarketingPage: React.FC = () => {
@@ -26,6 +29,13 @@ const MarketingPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [showCreateCampaignModal, setShowCreateCampaignModal] = useState(false);
+  
+  // Modal states
+  const [showViewCampaignModal, setShowViewCampaignModal] = useState(false);
+  const [showEditCampaignModal, setShowEditCampaignModal] = useState(false);
+  const [showViewLeadModal, setShowViewLeadModal] = useState(false);
+  const [selectedCampaign, setSelectedCampaign] = useState<any>(null);
+  const [selectedLead, setSelectedLead] = useState<any>(null);
 
   // Sample campaigns data
   const campaigns = [
@@ -135,6 +145,27 @@ const MarketingPage: React.FC = () => {
       case 'lost': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  // Modal handlers
+  const handleViewCampaign = (campaign: any) => {
+    setSelectedCampaign(campaign);
+    setShowViewCampaignModal(true);
+  };
+
+  const handleEditCampaign = (campaign: any) => {
+    setSelectedCampaign(campaign);
+    setShowEditCampaignModal(true);
+  };
+
+  const handleViewLead = (lead: any) => {
+    setSelectedLead(lead);
+    setShowViewLeadModal(true);
+  };
+
+  const handleUpdateCampaign = (updatedCampaign: any) => {
+    // In a real app, you would update the campaign in your data store
+    console.log('Updated campaign:', updatedCampaign);
   };
 
   const handleMoreLeadOptions = (leadId: string) => {
@@ -351,6 +382,24 @@ const MarketingPage: React.FC = () => {
                     />
                   </div>
                 </div>
+
+                {/* Campaign Actions */}
+                <div className="mt-4 flex justify-end space-x-2">
+                  <button
+                    onClick={() => handleViewCampaign(campaign)}
+                    className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                    type="button"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => handleEditCampaign(campaign)}
+                    className="p-2 text-gray-400 hover:text-green-600 transition-colors"
+                    type="button"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -416,9 +465,7 @@ const MarketingPage: React.FC = () => {
                   </button>
                   <button 
                     onClick={() => {
-                      // Open lead details in a proper modal
-                      toast.success(`Opening detailed lead profile for ${lead.name}`);
-                      // TODO: Implement ViewLeadModal
+                      handleViewLead(lead);
                     }}
                     className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
                     type="button"
@@ -442,6 +489,25 @@ const MarketingPage: React.FC = () => {
       <CreateCampaignModal 
         isOpen={showCreateCampaignModal} 
         onClose={() => setShowCreateCampaignModal(false)} 
+      />
+
+      <ViewCampaignModal
+        isOpen={showViewCampaignModal}
+        onClose={() => setShowViewCampaignModal(false)}
+        campaign={selectedCampaign}
+      />
+
+      <EditCampaignModal
+        isOpen={showEditCampaignModal}
+        onClose={() => setShowEditCampaignModal(false)}
+        campaign={selectedCampaign}
+        onSave={handleUpdateCampaign}
+      />
+
+      <ViewLeadModal
+        isOpen={showViewLeadModal}
+        onClose={() => setShowViewLeadModal(false)}
+        lead={selectedLead}
       />
     </div>
   );

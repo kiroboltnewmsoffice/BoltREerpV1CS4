@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import StatsCard from '../../components/Dashboard/StatsCard';
 import AddPropertyModal from '../../components/Modals/AddPropertyModal';
+import ViewAssetModal from '../../components/Modals/ViewAssetModal';
+import EditAssetModal from '../../components/Modals/EditAssetModal';
 import toast from 'react-hot-toast';
 import { formatCurrency } from '../../utils/currency';
 
@@ -24,6 +26,9 @@ const AssetsPage: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showViewAssetModal, setShowViewAssetModal] = useState(false);
+  const [showEditAssetModal, setShowEditAssetModal] = useState(false);
+  const [selectedAsset, setSelectedAsset] = useState<any>(null);
 
   // Sample assets data
   const assets = [
@@ -97,6 +102,23 @@ const AssetsPage: React.FC = () => {
   const activeAssets = assets.filter(a => a.status === 'active').length;
   const maintenanceAssets = assets.filter(a => a.status === 'maintenance').length;
   const totalValue = assets.reduce((sum, a) => sum + a.currentValue, 0);
+
+  // Asset modal handlers
+  const handleViewAsset = (assetId: string) => {
+    const asset = assets.find(a => a.id === assetId);
+    if (asset) {
+      setSelectedAsset(asset);
+      setShowViewAssetModal(true);
+    }
+  };
+
+  const handleEditAsset = (assetId: string) => {
+    const asset = assets.find(a => a.id === assetId);
+    if (asset) {
+      setSelectedAsset(asset);
+      setShowEditAssetModal(true);
+    }
+  };
 
   const handleMoreAssetOptions = (assetId: string) => {
     const asset = assets.find(a => a.id === assetId);
@@ -302,8 +324,7 @@ const AssetsPage: React.FC = () => {
                     <div className="flex items-center space-x-2">
                       <button 
                         onClick={() => {
-                          toast.success(`Opening asset details: ${asset.name}`);
-                          // TODO: Implement ViewAssetModal
+                          handleViewAsset(asset.id);
                         }}
                         className="text-gray-400 hover:text-blue-600 transition-colors"
                         type="button"
@@ -312,8 +333,7 @@ const AssetsPage: React.FC = () => {
                       </button>
                       <button 
                         onClick={() => {
-                          toast.success(`Opening edit form for asset: ${asset.name}`);
-                          // TODO: Implement EditAssetModal
+                          handleEditAsset(asset.id);
                         }}
                         className="text-gray-400 hover:text-green-600 transition-colors"
                         type="button"
@@ -346,6 +366,23 @@ const AssetsPage: React.FC = () => {
       <AddPropertyModal 
         isOpen={showAddModal} 
         onClose={() => setShowAddModal(false)} 
+      />
+
+      <ViewAssetModal
+        isOpen={showViewAssetModal}
+        onClose={() => setShowViewAssetModal(false)}
+        asset={selectedAsset}
+      />
+
+      <EditAssetModal
+        isOpen={showEditAssetModal}
+        onClose={() => setShowEditAssetModal(false)}
+        asset={selectedAsset}
+        onSave={(updatedAsset) => {
+          // Here you would typically update your data source
+          console.log('Asset updated:', updatedAsset);
+          setShowEditAssetModal(false);
+        }}
       />
      </div>
    );

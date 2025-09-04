@@ -18,12 +18,17 @@ import StatsCard from '../../components/Dashboard/StatsCard';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import ScheduleAppointmentModal from '../../components/Modals/ScheduleAppointmentModal';
+import ViewAppointmentModal from '../../components/Modals/ViewAppointmentModal';
+import EditAppointmentModal from '../../components/Modals/EditAppointmentModal';
 
 const AppointmentsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
 
   // Sample appointments data
   const appointments = [
@@ -115,6 +120,23 @@ const AppointmentsPage: React.FC = () => {
   ).length;
   const completedAppointments = appointments.filter(a => a.status === 'completed').length;
   const pendingAppointments = appointments.filter(a => a.status === 'scheduled' || a.status === 'confirmed').length;
+
+  // Modal handlers
+  const handleViewAppointment = (appointment: typeof appointments[0]) => {
+    setSelectedAppointment(appointment);
+    setShowViewModal(true);
+  };
+
+  const handleEditAppointment = (appointment: typeof appointments[0]) => {
+    setSelectedAppointment(appointment);
+    setShowEditModal(true);
+  };
+
+  const handleSaveAppointment = (updatedAppointment: any) => {
+    console.log('Updated appointment:', updatedAppointment);
+    toast.success('Appointment updated successfully!');
+    // In a real app, update the appointment in the data store
+  };
 
   return (
     <div className="space-y-6">
@@ -308,20 +330,14 @@ const AppointmentsPage: React.FC = () => {
                     </button>
                   )}
                   <button 
-                    onClick={() => {
-                      toast.success(`Opening appointment details: ${appointment.title}`);
-                      // TODO: Implement ViewAppointmentModal
-                    }}
+                    onClick={() => handleViewAppointment(appointment)}
                     className="text-gray-400 hover:text-blue-600 transition-colors"
                     type="button"
                   >
                     <Eye className="h-4 w-4" />
                   </button>
                   <button 
-                    onClick={() => {
-                      toast.success(`Opening edit form for appointment: ${appointment.title}`);
-                      // TODO: Implement EditAppointmentModal
-                    }}
+                    onClick={() => handleEditAppointment(appointment)}
                     className="text-gray-400 hover:text-green-600 transition-colors"
                     type="button"
                   >
@@ -344,6 +360,19 @@ const AppointmentsPage: React.FC = () => {
       <ScheduleAppointmentModal 
         isOpen={showScheduleModal} 
         onClose={() => setShowScheduleModal(false)} 
+      />
+      
+      <ViewAppointmentModal
+        isOpen={showViewModal}
+        onClose={() => setShowViewModal(false)}
+        appointment={selectedAppointment}
+      />
+      
+      <EditAppointmentModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        appointment={selectedAppointment}
+        onSave={handleSaveAppointment}
       />
     </div>
   );

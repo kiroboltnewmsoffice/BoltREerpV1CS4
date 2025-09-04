@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import StatsCard from '../../components/Dashboard/StatsCard';
 import ScheduleMaintenanceModal from '../../components/Modals/ScheduleMaintenanceModal';
+import ViewMaintenanceRequestModal from '../../components/Modals/ViewMaintenanceRequestModal';
+import EditMaintenanceRequestModal from '../../components/Modals/EditMaintenanceRequestModal';
 import { formatCurrency } from '../../utils/currency';
 
 const MaintenancePage: React.FC = () => {
@@ -25,6 +27,9 @@ const MaintenancePage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<typeof maintenanceRequests[0] | null>(null);
 
   // Sample maintenance data
   const maintenanceRequests = [
@@ -45,6 +50,7 @@ const MaintenancePage: React.FC = () => {
     {
       id: '2',
       assetId: '2',
+      propertyId: '2',
       title: 'Air Conditioning Repair - Office',
       description: 'AC unit not cooling properly in conference room',
       type: 'corrective' as const,
@@ -57,16 +63,18 @@ const MaintenancePage: React.FC = () => {
     },
     {
       id: '3',
+      assetId: '3',
       propertyId: '2',
       title: 'Emergency Plumbing - Unit B-405',
       description: 'Water leak in bathroom requires immediate attention',
       type: 'emergency' as const,
-      priority: 'critical' as const,
+      priority: 'urgent' as const,
       status: 'completed' as const,
       scheduledDate: '2024-01-24',
       completedDate: '2024-01-24',
       assignedTo: 'Hassan Plumbing Services',
       cost: 3200,
+      actualCost: 3500,
       notes: 'Pipe replacement completed successfully'
     }
   ];
@@ -104,6 +112,23 @@ const MaintenancePage: React.FC = () => {
   const pendingRequests = maintenanceRequests.filter(r => r.status === 'scheduled').length;
   const completedRequests = maintenanceRequests.filter(r => r.status === 'completed').length;
   const totalCost = maintenanceRequests.reduce((sum, r) => sum + r.cost, 0);
+
+  // Modal handlers
+  const handleViewRequest = (request: typeof maintenanceRequests[0]) => {
+    setSelectedRequest(request);
+    setShowViewModal(true);
+  };
+
+  const handleEditRequest = (request: typeof maintenanceRequests[0]) => {
+    setSelectedRequest(request);
+    setShowEditModal(true);
+  };
+
+  const handleSaveRequest = (updatedRequest: any) => {
+    console.log('Updated request:', updatedRequest);
+    toast.success('Maintenance request updated successfully!');
+    // In a real app, update the request in the data store
+  };
 
   const handleMoreMaintenanceOptions = (requestId: string) => {
     const request = maintenanceRequests.find(r => r.id === requestId);
@@ -264,20 +289,14 @@ const MaintenancePage: React.FC = () => {
                 
                 <div className="flex items-center space-x-2 ml-4">
                   <button 
-                    onClick={() => {
-                      toast.success(`Opening maintenance request details: ${request.title}`);
-                      // TODO: Implement ViewMaintenanceRequestModal
-                    }}
+                    onClick={() => handleViewRequest(request)}
                     className="text-gray-400 hover:text-blue-600 transition-colors"
                     type="button"
                   >
                     <Eye className="h-4 w-4" />
                   </button>
                   <button 
-                    onClick={() => {
-                      toast.success(`Opening edit form for maintenance request: ${request.title}`);
-                      // TODO: Implement EditMaintenanceRequestModal
-                    }}
+                    onClick={() => handleEditRequest(request)}
                     className="text-gray-400 hover:text-green-600 transition-colors"
                     type="button"
                   >
@@ -291,8 +310,21 @@ const MaintenancePage: React.FC = () => {
       </div>
       
       <ScheduleMaintenanceModal 
-        isOpen={showScheduleModal} 
+        isOpen={showScheduleModal}
         onClose={() => setShowScheduleModal(false)} 
+      />
+      
+      <ViewMaintenanceRequestModal
+        isOpen={showViewModal}
+        onClose={() => setShowViewModal(false)}
+        request={selectedRequest}
+      />
+      
+      <EditMaintenanceRequestModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        request={selectedRequest}
+        onSave={handleSaveRequest}
       />
     </div>
   );

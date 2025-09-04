@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, Receipt, User, DollarSign, Calendar, FileText, Mail } from 'lucide-react';
 import { formatCurrency } from '../../utils/currency';
 import { format } from 'date-fns';
@@ -11,6 +11,23 @@ interface ViewInvoiceModalProps {
 }
 
 const ViewInvoiceModal: React.FC<ViewInvoiceModalProps> = ({ isOpen, onClose, invoice }) => {
+  // Handle ESC key press
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscapeKey);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen || !invoice) return null;
 
   const getStatusColor = (status: string) => {

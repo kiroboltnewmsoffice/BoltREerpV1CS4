@@ -20,6 +20,7 @@ import {
 import StatsCard from '../../components/Dashboard/StatsCard';
 import AddInvoiceModal from '../../components/Modals/AddInvoiceModal';
 import ViewInvoiceModal from '../../components/Modals/ViewInvoiceModal';
+import EditInvoiceModal from '../../components/Modals/EditInvoiceModal';
 import { formatCurrency, formatCurrencyShort } from '../../utils/currency';
 import { format } from 'date-fns';
 
@@ -28,7 +29,9 @@ const InvoicesPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
+  const [editingInvoice, setEditingInvoice] = useState<any>(null);
 
   // Sample invoices data
   const invoices = [
@@ -389,7 +392,10 @@ const InvoicesPage: React.FC = () => {
                           <Eye className="h-4 w-4" />
                         </button>
                         <button 
-                          onClick={() => toast.success(`Edit functionality for invoice: ${invoice.invoiceNumber}`)}
+                          onClick={() => {
+                            setEditingInvoice(invoice);
+                            setShowEditModal(true);
+                          }}
                           className="text-gray-400 hover:text-green-600 transition-colors"
                           type="button"
                         >
@@ -436,6 +442,24 @@ const InvoicesPage: React.FC = () => {
         onClose={() => setShowViewModal(false)}
         invoice={selectedInvoice}
       />
+      
+      {editingInvoice && (
+        <EditInvoiceModal
+          invoice={editingInvoice}
+          isOpen={showEditModal}
+          onClose={() => {
+            setShowEditModal(false);
+            setEditingInvoice(null);
+          }}
+          onSave={(updatedInvoice) => {
+            console.log('Updated invoice:', updatedInvoice);
+            // TODO: Update invoice in the data store
+            toast.success('Invoice updated successfully');
+            setShowEditModal(false);
+            setEditingInvoice(null);
+          }}
+        />
+      )}
     </div>
   );
 };

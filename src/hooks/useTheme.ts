@@ -17,11 +17,11 @@ export const useTheme = () => {
   useEffect(() => {
     const root = document.documentElement;
     
-    // Remove both classes first
-    root.classList.remove('light', 'dark');
-    
-    // Add the current theme
-    root.classList.add(theme);
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
     
     // Store in localStorage
     localStorage.setItem('theme', theme);

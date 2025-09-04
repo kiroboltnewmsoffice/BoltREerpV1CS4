@@ -10,7 +10,6 @@ import {
   Clock,
   AlertCircle,
   CheckCircle,
-  Play,
   Eye,
   Edit
 } from 'lucide-react';
@@ -18,8 +17,11 @@ import { useDataStore } from '../../store/dataStore';
 import { useAuthStore } from '../../store/authStore';
 import StatsCard from '../../components/Dashboard/StatsCard';
 import CreateTaskModal from '../../components/Modals/CreateTaskModal';
+import ViewTaskModal from '../../components/Modals/ViewTaskModal';
+import EditTaskModal from '../../components/Modals/EditTaskModal';
 import DropdownMenu from '../../components/DropdownMenu';
 import { format, isAfter, isBefore, addDays } from 'date-fns';
+import { Task } from '../../types';
 
 const TasksPage: React.FC = () => {
   const { tasks, updateTask } = useDataStore();
@@ -29,6 +31,11 @@ const TasksPage: React.FC = () => {
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [assigneeFilter, setAssigneeFilter] = useState('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  
+  // Modal states
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
 
   // Filter tasks
   const filteredTasks = tasks.filter(task => {
@@ -71,16 +78,6 @@ const TasksPage: React.FC = () => {
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'completed': return CheckCircle;
-      case 'in_progress': return Play;
-      case 'pending': return Clock;
-      case 'cancelled': return AlertCircle;
-      default: return Clock;
-    }
-  };
-
   const isTaskOverdue = (dueDate: string, status: string) => {
     return status !== 'completed' && isBefore(new Date(dueDate), new Date());
   };
@@ -90,6 +87,55 @@ const TasksPage: React.FC = () => {
     const today = new Date();
     const threeDaysFromNow = addDays(today, 3);
     return status !== 'completed' && isAfter(due, today) && isBefore(due, threeDaysFromNow);
+  };
+
+  // Transform Task for modal
+  const transformTaskForModal = (task: Task) => {
+    return {
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      assignee: task.assignedTo, // Map assignedTo to assignee
+      priority: task.priority,
+      status: task.status,
+      dueDate: task.dueDate,
+      createdDate: task.createdAt, // Map createdAt to createdDate
+      project: task.category, // Map category to project  
+      tags: [], // Default empty array
+      estimatedHours: 8, // Default value
+      actualHours: 0, // Default value
+      progress: task.status === 'completed' ? 100 : task.status === 'in_progress' ? 50 : 0
+    };
+  };
+
+  // Modal handlers
+  const handleViewTask = (task: Task) => {
+    const transformedTask = transformTaskForModal(task);
+    setSelectedTask(transformedTask);
+    setShowViewModal(true);
+  };
+
+  const handleEditTask = (task: Task) => {
+    const transformedTask = transformTaskForModal(task);
+    setSelectedTask(transformedTask);
+    setShowEditModal(true);
+  };
+
+  const handleUpdateTask = (updatedModalTask: any) => {
+    if (!selectedTask) return;
+    
+    // Transform back to original Task format
+    const updatedTask: Partial<Task> = {
+      title: updatedModalTask.title,
+      description: updatedModalTask.description,
+      assignedTo: updatedModalTask.assignee,
+      priority: updatedModalTask.priority,
+      status: updatedModalTask.status,
+      dueDate: updatedModalTask.dueDate,
+      category: updatedModalTask.project || 'General'
+    };
+    
+    updateTask(updatedModalTask.id, updatedTask);
   };
 
   const handleMoreTaskOptions = (taskId: string) => {
@@ -268,7 +314,6 @@ const TasksPage: React.FC = () => {
         
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
           {filteredTasks.map((task) => {
-            const StatusIcon = getStatusIcon(task.status);
             const isOverdue = isTaskOverdue(task.dueDate, task.status);
             const isDueSoon = isTaskDueSoon(task.dueDate, task.status);
             
@@ -343,14 +388,14 @@ const TasksPage: React.FC = () => {
                   
                   <div className="flex items-center space-x-2 ml-4">
                     <button 
-                      onClick={() => toast(`Viewing task: ${task.title}`)}
+                      onClick={() => handleViewTask(task)}
                       className="text-gray-400 hover:text-blue-600 transition-colors"
                       type="button"
                     >
                       <Eye className="h-4 w-4" />
                     </button>
                     <button 
-                      onClick={() => toast(`Editing task: ${task.title}`)}
+                      onClick={() => handleEditTask(task)}
                       className="text-gray-400 hover:text-green-600 transition-colors"
                       type="button"
                     >
@@ -386,6 +431,19 @@ const TasksPage: React.FC = () => {
       <CreateTaskModal 
         isOpen={showCreateModal} 
         onClose={() => setShowCreateModal(false)} 
+      />
+      
+      <ViewTaskModal
+        isOpen={showViewModal}
+        onClose={() => setShowViewModal(false)}
+        task={selectedTask}
+      />
+      
+      <EditTaskModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        task={selectedTask}
+        onSave={handleUpdateTask}
       />
     </div>
   );
