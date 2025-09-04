@@ -25,8 +25,6 @@ export const useTheme = () => {
     
     // Store in localStorage
     localStorage.setItem('theme', theme);
-    
-    console.log('Theme applied:', theme, 'Classes:', root.classList.toString());
   }, [theme]);
 
   const toggleTheme = () => {

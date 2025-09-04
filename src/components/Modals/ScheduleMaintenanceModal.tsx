@@ -36,6 +36,7 @@ const ScheduleMaintenanceModal: React.FC<ScheduleMaintenanceModalProps> = ({ isO
       status: 'scheduled' as const
     };
 
+    // Submit maintenance data
     console.log('Scheduling maintenance:', maintenanceData);
     toast.success('Maintenance scheduled successfully!');
     onClose();

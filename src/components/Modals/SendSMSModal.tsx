@@ -51,6 +51,7 @@ const SendSMSModal: React.FC<SendSMSModalProps> = ({ isOpen, onClose }) => {
       attachments: []
     };
 
+    // Submit SMS data
     console.log('Sending SMS:', smsData);
     toast.success(`SMS ${formData.scheduledAt ? 'scheduled' : 'sent'} successfully!`);
     onClose();

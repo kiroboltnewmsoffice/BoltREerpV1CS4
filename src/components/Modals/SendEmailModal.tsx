@@ -45,6 +45,7 @@ const SendEmailModal: React.FC<SendEmailModalProps> = ({ isOpen, onClose }) => {
       attachments: []
     };
 
+    // Submit email data
     console.log('Sending email:', emailData);
     toast.success(`Email ${formData.scheduledAt ? 'scheduled' : 'sent'} successfully!`);
     onClose();

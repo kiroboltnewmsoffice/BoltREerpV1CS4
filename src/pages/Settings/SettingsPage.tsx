@@ -39,17 +39,22 @@ const SettingsPage: React.FC = () => {
   ];
 
   const handleSave = () => {
-    if (activeTab === 'profile') {
-      updateUser({
-        name: formData.name,
-        email: formData.email,
-        department: formData.department
-      });
-      toast.success('Profile updated successfully!');
-    } else {
-      toast.success('Settings saved successfully!');
+    try {
+      if (activeTab === 'profile') {
+        updateUser({
+          name: formData.name,
+          email: formData.email,
+          department: formData.department
+        });
+        toast.success('Profile updated successfully!');
+      } else {
+        // Save settings to localStorage for persistence
+        localStorage.setItem(`appSettings_${activeTab}`, JSON.stringify(formData));
+        toast.success('Settings saved successfully!');
+      }
+    } catch (error) {
+      toast.error('Failed to save settings. Please try again.');
     }
-    console.log('Settings saved:', formData);
   };
 
   const renderProfileTab = () => (

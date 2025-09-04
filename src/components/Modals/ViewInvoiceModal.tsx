@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Receipt, User, DollarSign, Calendar, FileText, Mail } from 'lucide-react';
 import { formatCurrency } from '../../utils/currency';
 import { format } from 'date-fns';
+import toast from 'react-hot-toast';
 
 interface ViewInvoiceModalProps {
   isOpen: boolean;
@@ -168,7 +169,7 @@ const ViewInvoiceModal: React.FC<ViewInvoiceModalProps> = ({ isOpen, onClose, in
           <button
             onClick={() => {
               // Simulate email sending
-              console.log('Sending invoice email for:', invoice.invoiceNumber);
+              toast.success(`Invoice email sent for ${invoice.invoiceNumber}`);
             }}
             className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center"
           >

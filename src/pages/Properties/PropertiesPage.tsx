@@ -29,7 +29,12 @@ const PropertiesPage: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+
+  const handleAdvancedFilters = () => {
+    setShowAdvancedFilters(!showAdvancedFilters);
+    toast.info('Advanced filters ' + (showAdvancedFilters ? 'hidden' : 'shown'));
+  };
 
   // Filter properties
   const filteredProperties = properties.filter(property => {
@@ -203,9 +208,10 @@ const PropertiesPage: React.FC = () => {
             </select>
             
             <button 
-              onClick={() => console.log('Filter options clicked')}
+              onClick={handleAdvancedFilters}
               className="p-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
               type="button"
+              title="Advanced Filters"
             >
               <Filter className="h-4 w-4 text-gray-600 dark:text-gray-400" />
             </button>

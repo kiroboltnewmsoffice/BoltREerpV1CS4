@@ -183,9 +183,10 @@ const CRMDashboard: React.FC = () => {
             </select>
             
             <button 
-              onClick={() => console.log('Filter options clicked')}
+              onClick={() => toast.info('Advanced filters panel would open here in a full implementation')}
               className="p-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
               type="button"
+              title="Advanced Filters"
             >
               <Filter className="h-4 w-4 text-gray-600 dark:text-gray-400" />
             </button>

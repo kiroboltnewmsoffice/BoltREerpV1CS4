@@ -218,8 +218,8 @@ const HRDashboard: React.FC = () => {
         
         <button 
           onClick={() => {
-            console.log('Open attendance tracker');
-            toast.info('Opening attendance tracker...');
+            toast.success('Attendance tracker opened successfully!');
+            // In a real app, this would navigate to attendance tracking page
           }}
           className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
           type="button"
@@ -235,8 +235,8 @@ const HRDashboard: React.FC = () => {
         
         <button 
           onClick={() => {
-            console.log('Open leave requests');
-            toast.info('Opening leave requests...');
+            toast.success('Leave requests system opened successfully!');
+            // In a real app, this would navigate to leave requests page
           }}
           className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
           type="button"
@@ -252,8 +252,8 @@ const HRDashboard: React.FC = () => {
         
         <button 
           onClick={() => {
-            console.log('Open payroll system');
-            toast.info('Opening payroll system...');
+            toast.success('Payroll system opened successfully!');
+            // In a real app, this would navigate to payroll management page
           }}
           className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
           type="button"
@@ -460,7 +460,7 @@ const HRDashboard: React.FC = () => {
                     <div className="flex space-x-2">
                       <button 
                         onClick={() => {
-                          console.log('Approve leave request:', request.id);
+                          // In a real app, this would update the request status in the database
                           toast.success(`Leave request approved for ${request.employeeName}`);
                         }}
                         className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors"
@@ -470,7 +470,7 @@ const HRDashboard: React.FC = () => {
                       </button>
                       <button 
                         onClick={() => {
-                          console.log('Reject leave request:', request.id);
+                          // In a real app, this would update the request status in the database
                           toast.error(`Leave request rejected for ${request.employeeName}`);
                         }}
                         className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition-colors"

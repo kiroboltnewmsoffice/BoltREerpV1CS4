@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useTheme } from './hooks/useTheme';
 import { useAuthStore } from './store/authStore';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Layout Components
 import MainLayout from './components/Layout/MainLayout';
@@ -43,56 +44,58 @@ function App() {
   const { theme } = useTheme();
 
   return (
-    <div className={theme}>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route
-            path="/*"
-            element={
-              <ProtectedRoute>
-                <MainLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="crm" element={<CRMDashboard />} />
-            <Route path="properties" element={<PropertiesPage />} />
-            <Route path="accounting" element={<AccountingPage />} />
-            <Route path="cheques" element={<ChequesPage />} />
-            <Route path="contracts" element={<ContractsPage />} />
-            <Route path="invoices" element={<InvoicesPage />} />
-            <Route path="projects" element={<ProjectsPage />} />
-            <Route path="hr" element={<HRDashboard />} />
-            <Route path="procurement" element={<ProcurementPage />} />
-            <Route path="inventory" element={<InventoryPage />} />
-            <Route path="marketing" element={<MarketingPage />} />
-            <Route path="appointments" element={<AppointmentsPage />} />
-            <Route path="assets" element={<AssetsPage />} />
-            <Route path="maintenance" element={<MaintenancePage />} />
-            <Route path="communications" element={<CommunicationsPage />} />
-            <Route path="workflows" element={<WorkflowsPage />} />
-            <Route path="audit" element={<AuditPage />} />
-            <Route path="reports" element={<ReportsPage />} />
-            <Route path="tasks" element={<TasksPage />} />
-            <Route path="notifications" element={<NotificationsPage />} />
-            <Route path="users" element={<UsersPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-          </Route>
-        </Routes>
-      </Router>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: theme === 'dark' ? '#374151' : '#ffffff',
-            color: theme === 'dark' ? '#ffffff' : '#000000',
-          },
-        }}
-      />
-    </div>
+    <ErrorBoundary>
+      <div className={theme}>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route
+              path="/*"
+              element={
+                <ProtectedRoute>
+                  <MainLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="crm" element={<CRMDashboard />} />
+              <Route path="properties" element={<PropertiesPage />} />
+              <Route path="accounting" element={<AccountingPage />} />
+              <Route path="cheques" element={<ChequesPage />} />
+              <Route path="contracts" element={<ContractsPage />} />
+              <Route path="invoices" element={<InvoicesPage />} />
+              <Route path="projects" element={<ProjectsPage />} />
+              <Route path="hr" element={<HRDashboard />} />
+              <Route path="procurement" element={<ProcurementPage />} />
+              <Route path="inventory" element={<InventoryPage />} />
+              <Route path="marketing" element={<MarketingPage />} />
+              <Route path="appointments" element={<AppointmentsPage />} />
+              <Route path="assets" element={<AssetsPage />} />
+              <Route path="maintenance" element={<MaintenancePage />} />
+              <Route path="communications" element={<CommunicationsPage />} />
+              <Route path="workflows" element={<WorkflowsPage />} />
+              <Route path="audit" element={<AuditPage />} />
+              <Route path="reports" element={<ReportsPage />} />
+              <Route path="tasks" element={<TasksPage />} />
+              <Route path="notifications" element={<NotificationsPage />} />
+              <Route path="users" element={<UsersPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+            </Route>
+          </Routes>
+        </Router>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: theme === 'dark' ? '#374151' : '#ffffff',
+              color: theme === 'dark' ? '#ffffff' : '#000000',
+            },
+          }}
+        />
+      </div>
+    </ErrorBoundary>
   );
 }
 
