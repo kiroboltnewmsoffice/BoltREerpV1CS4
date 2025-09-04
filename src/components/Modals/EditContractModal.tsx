@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, FileText, User, Building, DollarSign, Calendar } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { formatCurrency } from '../../utils/currency';
 import toast from 'react-hot-toast';
 
@@ -12,6 +13,9 @@ interface EditContractModalProps {
 
 const EditContractModal: React.FC<EditContractModalProps> = ({ isOpen, onClose, contract }) => {
   const { updateContract, customers, units, properties } = useDataStore();
+  useEscapeKey(isOpen, onClose);
+
+
   const [formData, setFormData] = useState({
     customerId: '',
     unitId: '',
@@ -54,8 +58,8 @@ const EditContractModal: React.FC<EditContractModalProps> = ({ isOpen, onClose, 
   if (!isOpen || !contract) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()} max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Edit Contract</h2>
           <button
@@ -236,3 +240,4 @@ const EditContractModal: React.FC<EditContractModalProps> = ({ isOpen, onClose, 
 };
 
 export default EditContractModal;
+

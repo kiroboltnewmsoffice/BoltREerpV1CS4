@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, FileText, User, Building, DollarSign, Calendar } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
 import { useAuthStore } from '../../store/authStore';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { formatCurrency } from '../../utils/currency';
 import toast from 'react-hot-toast';
 
@@ -13,6 +14,9 @@ interface AddContractModalProps {
 const AddContractModal: React.FC<AddContractModalProps> = ({ isOpen, onClose }) => {
   const { addContract, customers, units, properties } = useDataStore();
   const { user } = useAuthStore();
+  
+  useEscapeKey(isOpen, onClose);
+  
   const [formData, setFormData] = useState({
     customerId: '',
     unitId: '',
@@ -78,8 +82,16 @@ const AddContractModal: React.FC<AddContractModalProps> = ({ isOpen, onClose }) 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Create New Contract</h2>
           <button

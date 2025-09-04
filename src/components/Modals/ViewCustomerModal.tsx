@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, User, Mail, Phone, MapPin, Building, Calendar, DollarSign } from 'lucide-react';
 import { Customer } from '../../types';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { formatCurrency } from '../../utils/currency';
 import { format } from 'date-fns';
 
@@ -11,6 +12,8 @@ interface ViewCustomerModalProps {
 }
 
 const ViewCustomerModal: React.FC<ViewCustomerModalProps> = ({ isOpen, onClose, customer }) => {
+  useEscapeKey(isOpen, onClose);
+  
   if (!isOpen || !customer) return null;
 
   const getStatusColor = (status: string) => {

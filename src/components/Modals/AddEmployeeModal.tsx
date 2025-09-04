@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, User, Mail, Phone, Building, DollarSign, Calendar } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { formatCurrency } from '../../utils/currency';
 import toast from 'react-hot-toast';
 
@@ -11,6 +12,9 @@ interface AddEmployeeModalProps {
 
 const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ isOpen, onClose }) => {
   const { addEmployee } = useDataStore();
+  
+  useEscapeKey(isOpen, onClose);
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, MessageSquare, User, Send } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { useAuthStore } from '../../store/authStore';
 import toast from 'react-hot-toast';
 
@@ -12,6 +13,9 @@ interface SendSMSModalProps {
 const SendSMSModal: React.FC<SendSMSModalProps> = ({ isOpen, onClose }) => {
   const { customers } = useDataStore();
   const { user } = useAuthStore();
+  useEscapeKey(isOpen, onClose);
+
+
   const [formData, setFormData] = useState({
     toCustomerId: '',
     content: '',
@@ -67,8 +71,8 @@ const SendSMSModal: React.FC<SendSMSModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()} max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Send SMS</h2>
           <button
@@ -155,3 +159,4 @@ const SendSMSModal: React.FC<SendSMSModalProps> = ({ isOpen, onClose }) => {
 };
 
 export default SendSMSModal;
+

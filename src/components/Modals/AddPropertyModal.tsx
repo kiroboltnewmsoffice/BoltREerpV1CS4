@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Building, MapPin, Home, DollarSign } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { formatCurrency } from '../../utils/currency';
 import toast from 'react-hot-toast';
 
@@ -11,6 +12,9 @@ interface AddPropertyModalProps {
 
 const AddPropertyModal: React.FC<AddPropertyModalProps> = ({ isOpen, onClose }) => {
   const { addProperty } = useDataStore();
+  
+  useEscapeKey(isOpen, onClose);
+  
   const [formData, setFormData] = useState({
     name: '',
     type: 'residential' as const,

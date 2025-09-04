@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Building, MapPin, Home, DollarSign } from 'lucide-react';
 import { Property } from '../../types';
 import { useDataStore } from '../../store/dataStore';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 import toast from 'react-hot-toast';
 
 interface EditPropertyModalProps {
@@ -12,6 +13,9 @@ interface EditPropertyModalProps {
 
 const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ isOpen, onClose, property }) => {
   const { properties, updateProperty } = useDataStore();
+  useEscapeKey(isOpen, onClose);
+
+
   const [formData, setFormData] = useState({
     name: '',
     type: 'residential' as const,
@@ -22,6 +26,9 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ isOpen, onClose, 
     completionDate: '',
     amenities: [] as string[]
   });
+  useEscapeKey(isOpen, onClose);
+
+
 
   const [amenityInput, setAmenityInput] = useState('');
 
@@ -74,8 +81,8 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ isOpen, onClose, 
   if (!isOpen || !property) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()} max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Edit Property</h2>
           <button
@@ -248,3 +255,4 @@ const EditPropertyModal: React.FC<EditPropertyModalProps> = ({ isOpen, onClose, 
 };
 
 export default EditPropertyModal;
+

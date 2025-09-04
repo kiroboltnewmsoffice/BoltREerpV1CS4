@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Package, User, Calendar, DollarSign, Plus, Trash2 } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { formatCurrency } from '../../utils/currency';
 import toast from 'react-hot-toast';
 
@@ -19,6 +20,9 @@ interface PurchaseOrderItem {
 
 const AddPurchaseOrderModal: React.FC<AddPurchaseOrderModalProps> = ({ isOpen, onClose }) => {
   const { suppliers } = useDataStore();
+  useEscapeKey(isOpen, onClose);
+
+
   const [formData, setFormData] = useState({
     supplierId: '',
     expectedDelivery: '',
@@ -100,8 +104,8 @@ const AddPurchaseOrderModal: React.FC<AddPurchaseOrderModalProps> = ({ isOpen, o
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()} max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Create Purchase Order</h2>
           <button
@@ -272,3 +276,4 @@ const AddPurchaseOrderModal: React.FC<AddPurchaseOrderModalProps> = ({ isOpen, o
 };
 
 export default AddPurchaseOrderModal;
+
