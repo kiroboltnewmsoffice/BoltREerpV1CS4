@@ -12,7 +12,10 @@ import {
   Calendar,
   Eye,
   Edit,
-  MoreHorizontal
+  MoreHorizontal,
+  FileText,
+  Copy,
+  Archive
 } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
 import { Property } from '../../types';
@@ -20,6 +23,7 @@ import StatsCard from '../../components/Dashboard/StatsCard';
 import AddPropertyModal from '../../components/Modals/AddPropertyModal';
 import ViewPropertyModal from '../../components/Modals/ViewPropertyModal';
 import EditPropertyModal from '../../components/Modals/EditPropertyModal';
+import DropdownMenu from '../../components/DropdownMenu';
 import { formatCurrencyShort } from '../../utils/currency';
 
 const PropertiesPage: React.FC = () => {
@@ -117,23 +121,49 @@ const PropertiesPage: React.FC = () => {
 
   const handleMoreOptions = (propertyId: string) => {
     const property = (properties || []).find(p => p?.id === propertyId);
-    if (property) {
-      const options = [
-        'View Units',
-        'Add Unit',
-        'Property Report',
-        'Marketing Materials',
-        'Price History',
-        'Duplicate Property',
-        'Archive Property'
-      ];
-      const selectedOption = window.prompt(`Select an option for ${property.name}:\n${options.map((opt, i) => `${i + 1}. ${opt}`).join('\n')}`);
-      if (selectedOption) {
-        toast.success(`${options[parseInt(selectedOption) - 1] || 'Option'} selected for ${property.name}`);
-      }
-    } else {
+    if (!property) {
       toast.error('Property not found');
+      return [];
     }
+
+    return [
+      {
+        label: 'View Units',
+        onClick: () => toast.success(`Viewing units for ${property.name}`),
+        icon: <Home className="h-4 w-4" />
+      },
+      {
+        label: 'Add Unit',
+        onClick: () => toast.success(`Add unit to ${property.name}`),
+        icon: <Plus className="h-4 w-4" />
+      },
+      {
+        label: 'Property Report',
+        onClick: () => toast.success(`Generating report for ${property.name}`),
+        icon: <FileText className="h-4 w-4" />
+      },
+      {
+        label: 'Marketing Materials',
+        onClick: () => toast.success(`Opening marketing materials for ${property.name}`),
+        icon: <Calendar className="h-4 w-4" />
+      },
+      {
+        label: 'Price History',
+        onClick: () => toast.success(`Viewing price history for ${property.name}`),
+        icon: <DollarSign className="h-4 w-4" />
+      },
+      {
+        label: 'Duplicate Property',
+        onClick: () => toast.success(`Duplicating ${property.name}`),
+        icon: <Copy className="h-4 w-4" />
+      },
+      {
+        label: 'Archive Property',
+        onClick: () => toast.success(`Archived ${property.name}`),
+        icon: <Archive className="h-4 w-4" />,
+        className: 'text-red-600 dark:text-red-400'
+      }
+    ];
   };
 
   return (
@@ -374,13 +404,10 @@ const PropertiesPage: React.FC = () => {
                 >
                   <Edit className="h-4 w-4" />
                 </button>
-                <button 
-                  onClick={() => handleMoreOptions(property.id)}
+                <DropdownMenu 
+                  options={handleMoreOptions(property.id)}
                   className="text-gray-400 hover:text-gray-600 transition-colors"
-                  type="button"
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </button>
+                />
               </div>
             </div>
           </div>

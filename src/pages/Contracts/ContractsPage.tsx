@@ -23,6 +23,7 @@ import AddContractModal from '../../components/Modals/AddContractModal';
 import ViewContractModal from '../../components/Modals/ViewContractModal';
 import EditContractModal from '../../components/Modals/EditContractModal';
 import { formatCurrency, formatCurrencyShort } from '../../utils/currency';
+import { downloadFile, generateContractDocument } from '../../utils/downloads';
 import { format } from 'date-fns';
 
 const ContractsPage: React.FC = () => {
@@ -106,51 +107,14 @@ const ContractsPage: React.FC = () => {
       const unit = units.find(u => u.id === contract.unitId);
       const property = properties.find(p => p.id === unit?.propertyId);
       
-      // Generate comprehensive contract content
-      const contractContent = `
-CONTRACT DOCUMENT
-=================
-
-Contract Number: ${contract.contractNumber}
-Date: ${format(new Date(contract.signedDate), 'MMMM dd, yyyy')}
-
-CUSTOMER INFORMATION:
-Name: ${customer?.name || 'Unknown'}
-Email: ${customer?.email || 'N/A'}
-Phone: ${customer?.phone || 'N/A'}
-Address: ${customer?.address || 'N/A'}
-
-PROPERTY DETAILS:
-Property: ${property?.name || 'Unknown'}
-Unit: ${unit?.unitNumber || 'N/A'}
-Size: ${unit?.size || 'N/A'} sqm
-Type: ${unit?.type || 'N/A'}
-
-FINANCIAL TERMS:
-Total Value: ${formatCurrency(contract.totalValue)}
-Payment Terms: ${contract.paymentTerms}
-
-CONTRACT STATUS:
-Status: ${contract.status.replace('_', ' ').toUpperCase()}
-Legal Review: ${contract.legalReviewed ? 'Completed' : 'Pending'}
-${contract.reviewedBy ? `Reviewed By: ${contract.reviewedBy}` : ''}
-
-DOCUMENTS:
-${contract.documents.map(doc => `- ${doc}`).join('\n')}
-
-Generated on: ${new Date().toLocaleString()}
-      `.trim();
+      // Generate comprehensive contract content using utility
+      const contractContent = generateContractDocument(contract, customer, unit, property);
       
-      const blob = new Blob([contractContent], { type: 'text/plain' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${contract.contractNumber}-contract.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
+      // Download the contract
+      downloadFile(contractContent, `${contract.contractNumber}-contract.txt`);
       toast.success(`Downloaded contract: ${contract.contractNumber}`);
+    } else {
+      toast.error('Contract not found');
     }
   };
 
@@ -200,7 +164,7 @@ Generated on: ${new Date().toLocaleString()}
               toast.success(`Printing contract ${contract.contractNumber}`);
               break;
             case 'history':
-              toast.info(`Viewing history for ${contract.contractNumber}`);
+              toast.success(`Viewing history for ${contract.contractNumber}`);
               break;
             case 'archive':
               if (window.confirm(`Archive contract ${contract.contractNumber}?`)) {

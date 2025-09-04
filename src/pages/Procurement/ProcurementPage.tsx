@@ -25,6 +25,10 @@ const ProcurementPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [showAddSupplierModal, setShowAddSupplierModal] = useState(false);
   const [showAddPurchaseOrderModal, setShowAddPurchaseOrderModal] = useState(false);
+  const [showViewSupplierModal, setShowViewSupplierModal] = useState(false);
+  const [showEditSupplierModal, setShowEditSupplierModal] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState<any>(null);
+  const [selectedPurchaseOrder, setSelectedPurchaseOrder] = useState<any>(null);
 
   // Sample suppliers data
   const suppliers = [

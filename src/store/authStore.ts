@@ -1,18 +1,14 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { User, UserRole } from '../types';
-import { Theme } from '../hooks/useTheme';
+import { User } from '../types';
 
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  theme: Theme;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  setTheme: (theme: Theme) => void;
   hasPermission: (module: string, action: string) => boolean;
   updateUser: (updates: Partial<User>) => void;
-  toggleTheme: () => void;
 }
 
 // Sample users data
@@ -64,9 +60,8 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       isAuthenticated: false,
-      theme: 'light',
       
-      login: async (email: string, password: string) => {
+      login: async (email: string, _password: string) => {
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000));
         
@@ -79,23 +74,6 @@ export const useAuthStore = create<AuthState>()(
       
       logout: () => {
         set({ user: null, isAuthenticated: false });
-      },
-      
-      setTheme: (theme: Theme) => {
-        set({ theme });
-      },
-      
-      toggleTheme: () => {
-        const currentTheme = get().theme;
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        set({ theme: newTheme });
-        
-        // Apply theme to document
-        const root = document.documentElement;
-        root.classList.remove('light', 'dark');
-        root.classList.add(newTheme);
-        
-        return newTheme;
       },
       
       updateUser: (updates: Partial<User>) => {
