@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { X, Receipt, User, DollarSign, Calendar, FileText, Mail } from 'lucide-react';
 import { formatCurrency } from '../../utils/currency';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface ViewInvoiceModalProps {
   isOpen: boolean;
@@ -11,22 +12,8 @@ interface ViewInvoiceModalProps {
 }
 
 const ViewInvoiceModal: React.FC<ViewInvoiceModalProps> = ({ isOpen, onClose, invoice }) => {
-  // Handle ESC key press
-  useEffect(() => {
-    const handleEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscapeKey);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [isOpen, onClose]);
+  // Handle ESC key press with custom hook
+  useEscapeKey(isOpen, onClose);
 
   if (!isOpen || !invoice) return null;
 
@@ -42,13 +29,21 @@ const ViewInvoiceModal: React.FC<ViewInvoiceModalProps> = ({ isOpen, onClose, in
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div 
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        onClick={(e) => e.stopPropagation()}
+        tabIndex={-1}
+      >
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Invoice Details</h2>
+          <h2 id="modal-title" className="text-xl font-semibold text-gray-900 dark:text-white">Invoice Details</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            aria-label="Close modal"
           >
             <X className="h-6 w-6" />
           </button>

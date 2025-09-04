@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { X, CheckSquare, Clock, User, Calendar, Tag, AlertCircle, FileText } from 'lucide-react';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface Task {
   id: string;
@@ -24,22 +25,8 @@ interface ViewTaskModalProps {
 }
 
 const ViewTaskModal: React.FC<ViewTaskModalProps> = ({ isOpen, onClose, task }) => {
-  // Handle ESC key press
-  useEffect(() => {
-    const handleEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscapeKey);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [isOpen, onClose]);
+  // Handle ESC key press with custom hook
+  useEscapeKey(isOpen, onClose);
 
   if (!isOpen || !task) return null;
 

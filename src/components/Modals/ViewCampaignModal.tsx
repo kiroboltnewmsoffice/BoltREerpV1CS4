@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { X, Target, TrendingUp, Users, DollarSign, Calendar, Eye, Mail, MessageSquare } from 'lucide-react';
 import { formatCurrency } from '../../utils/currency';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface Campaign {
   id: string;
@@ -33,22 +34,8 @@ interface ViewCampaignModalProps {
 }
 
 const ViewCampaignModal: React.FC<ViewCampaignModalProps> = ({ isOpen, onClose, campaign }) => {
-  // Handle ESC key press
-  useEffect(() => {
-    const handleEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscapeKey);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [isOpen, onClose]);
+  // Handle ESC key press with custom hook
+  useEscapeKey(isOpen, onClose);
 
   if (!isOpen || !campaign) return null;
 

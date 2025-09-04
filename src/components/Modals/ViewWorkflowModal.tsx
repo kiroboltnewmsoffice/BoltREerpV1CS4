@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { X, Workflow, CheckCircle, Clock, User, Calendar, Play, Settings } from 'lucide-react';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface WorkflowStep {
   id: string;
@@ -27,22 +28,8 @@ interface ViewWorkflowModalProps {
 }
 
 const ViewWorkflowModal: React.FC<ViewWorkflowModalProps> = ({ isOpen, onClose, workflow }) => {
-  // Handle ESC key press
-  useEffect(() => {
-    const handleEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscapeKey);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [isOpen, onClose]);
+  // Handle ESC key press with custom hook
+  useEscapeKey(isOpen, onClose);
 
   if (!isOpen || !workflow) return null;
 

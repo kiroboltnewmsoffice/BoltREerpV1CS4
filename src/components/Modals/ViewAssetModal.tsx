@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { X, Shield, Calendar, DollarSign, MapPin, User, FileText, Wrench, AlertCircle } from 'lucide-react';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 interface Asset {
   id: string;
@@ -28,22 +29,8 @@ interface ViewAssetModalProps {
 }
 
 const ViewAssetModal: React.FC<ViewAssetModalProps> = ({ isOpen, onClose, asset }) => {
-  // Handle ESC key press
-  useEffect(() => {
-    const handleEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscapeKey);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [isOpen, onClose]);
+  // Handle ESC key press with custom hook
+  useEscapeKey(isOpen, onClose);
 
   if (!isOpen || !asset) return null;
 

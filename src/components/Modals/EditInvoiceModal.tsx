@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Plus, Trash2, DollarSign, Calendar, User, FileText, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { format } from 'date-fns';
 
 interface InvoiceItem {
@@ -53,22 +54,8 @@ const EditInvoiceModal: React.FC<EditInvoiceModalProps> = ({ invoice, isOpen, on
     unitPrice: 0
   });
 
-  // Handle ESC key press
-  useEffect(() => {
-    const handleEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscapeKey);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [isOpen, onClose]);
+  // Handle ESC key press with custom hook
+  useEscapeKey(isOpen, onClose);
 
   // Available customers for selection
   const customers = [
