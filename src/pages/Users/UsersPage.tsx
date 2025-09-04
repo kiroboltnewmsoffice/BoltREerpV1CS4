@@ -20,6 +20,7 @@ import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import AddUserModal from '../../components/Modals/AddUserModal';
 import ViewUserModal from '../../components/Modals/ViewUserModal';
+import PlaceholderModal from '../../components/Modals/PlaceholderModal';
 
 const UsersPage: React.FC = () => {
   const { user: currentUser } = useAuthStore();
@@ -29,6 +30,11 @@ const UsersPage: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
+  
+  // Placeholder modal states
+  const [showPermissionsModal, setShowPermissionsModal] = useState(false);
+  const [showActivityLogModal, setShowActivityLogModal] = useState(false);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
 
   // Sample users data (expanded)
   const users = [
@@ -151,22 +157,22 @@ const UsersPage: React.FC = () => {
         {
           label: 'Change Permissions',
           onClick: () => {
-            toast.success(`Opening permissions editor for ${user.name}`);
-            // TODO: Open permissions modal
+            setSelectedUser(user);
+            setShowPermissionsModal(true);
           }
         },
         {
           label: 'View Activity Log',
           onClick: () => {
-            toast.success(`Opening activity log for ${user.name}`);
-            // TODO: Open activity log modal
+            setSelectedUser(user);
+            setShowActivityLogModal(true);
           }
         },
         {
           label: 'Send Notification',
           onClick: () => {
-            toast.success(`Opening notification composer for ${user.name}`);
-            // TODO: Open notification modal
+            setSelectedUser(user);
+            setShowNotificationModal(true);
           }
         },
         {
@@ -437,6 +443,27 @@ const UsersPage: React.FC = () => {
         isOpen={showViewModal} 
         onClose={() => setShowViewModal(false)}
         user={selectedUser}
+      />
+      
+      <PlaceholderModal 
+        isOpen={showPermissionsModal} 
+        onClose={() => setShowPermissionsModal(false)}
+        title="User Permissions Editor"
+        description={`Configure permissions and access levels for ${selectedUser?.name || 'this user'}. This feature will allow you to manage role-based access control.`}
+      />
+      
+      <PlaceholderModal 
+        isOpen={showActivityLogModal} 
+        onClose={() => setShowActivityLogModal(false)}
+        title="User Activity Log"
+        description={`View detailed activity history for ${selectedUser?.name || 'this user'}. This will include login history, actions performed, and system interactions.`}
+      />
+      
+      <PlaceholderModal 
+        isOpen={showNotificationModal} 
+        onClose={() => setShowNotificationModal(false)}
+        title="Send Notification"
+        description={`Compose and send notifications to ${selectedUser?.name || 'this user'}. This feature will support email, SMS, and in-app notifications.`}
       />
     </div>
   );
