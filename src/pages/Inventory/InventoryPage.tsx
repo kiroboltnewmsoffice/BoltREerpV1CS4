@@ -11,11 +11,12 @@ import {
   TrendingUp,
   Eye,
   Edit,
-  BarChart3,
-  MoreHorizontal
+  BarChart3
 } from 'lucide-react';
 import StatsCard from '../../components/Dashboard/StatsCard';
 import AddInventoryItemModal from '../../components/Modals/AddInventoryItemModal';
+import ViewInventoryItemModal from '../../components/Modals/ViewInventoryItemModal';
+import EditInventoryItemModal from '../../components/Modals/EditInventoryItemModal';
 import { formatCurrency } from '../../utils/currency';
 
 const InventoryPage: React.FC = () => {
@@ -23,6 +24,9 @@ const InventoryPage: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
 
   // Sample inventory data
   const inventory = [
@@ -116,6 +120,22 @@ const InventoryPage: React.FC = () => {
   const lowStockItems = inventory.filter(i => i.status === 'low_stock').length;
   const outOfStockItems = inventory.filter(i => i.status === 'out_of_stock').length;
   const totalValue = inventory.reduce((sum, i) => sum + (i.quantity * i.unitPrice), 0);
+
+  const handleViewItem = (itemId: string) => {
+    const item = inventory.find(i => i.id === itemId);
+    if (item) {
+      setSelectedItem(item);
+      setShowViewModal(true);
+    }
+  };
+
+  const handleEditItem = (itemId: string) => {
+    const item = inventory.find(i => i.id === itemId);
+    if (item) {
+      setSelectedItem(item);
+      setShowEditModal(true);
+    }
+  };
 
   const handleMoreInventoryOptions = (itemId: string) => {
     const item = inventory.find(i => i.id === itemId);
@@ -380,14 +400,14 @@ const InventoryPage: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
                         <button 
-                          onClick={() => toast(`Viewing details for ${item.itemName}`)}
+                          onClick={() => handleViewItem(item.id)}
                           className="text-gray-400 hover:text-blue-600 transition-colors"
                           type="button"
                         >
                           <Eye className="h-4 w-4" />
                         </button>
                         <button 
-                          onClick={() => toast(`Editing ${item.itemName}`)}
+                          onClick={() => handleEditItem(item.id)}
                           className="text-gray-400 hover:text-green-600 transition-colors"
                           type="button"
                         >
@@ -420,6 +440,22 @@ const InventoryPage: React.FC = () => {
       <AddInventoryItemModal 
         isOpen={showAddModal} 
         onClose={() => setShowAddModal(false)} 
+      />
+
+      <ViewInventoryItemModal
+        isOpen={showViewModal}
+        onClose={() => setShowViewModal(false)}
+        item={selectedItem}
+      />
+
+      <EditInventoryItemModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        item={selectedItem}
+        onSave={(updatedItem) => {
+          // TODO: Update the item in the data store
+          console.log('Updated item:', updatedItem);
+        }}
       />
     </div>
   );
