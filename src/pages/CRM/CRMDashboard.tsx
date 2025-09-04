@@ -12,14 +12,14 @@ import {
   DollarSign,
   TrendingUp,
   Eye,
-  Edit,
-  MoreHorizontal
+  Edit
 } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
 import StatsCard from '../../components/Dashboard/StatsCard';
 import AddCustomerModal from '../../components/Modals/AddCustomerModal';
 import ViewCustomerModal from '../../components/Modals/ViewCustomerModal';
 import EditCustomerModal from '../../components/Modals/EditCustomerModal';
+import DropdownMenu from '../../components/DropdownMenu';
 import { formatCurrency } from '../../utils/currency';
 
 const CRMDashboard: React.FC = () => {
@@ -84,19 +84,60 @@ const CRMDashboard: React.FC = () => {
     const customer = customers.find(c => c.id === customerId);
     if (customer) {
       const options = [
-        'Send Email',
-        'Schedule Call',
-        'Add Note',
-        'View History',
-        'Export Data',
-        'Merge Customer',
-        'Archive Customer'
+        {
+          label: 'Send Email',
+          onClick: () => {
+            toast.success(`Opening email composer for ${customer.name}`);
+            // TODO: Open email modal
+          }
+        },
+        {
+          label: 'Schedule Call',
+          onClick: () => {
+            toast.success(`Opening call scheduler for ${customer.name}`);
+            // TODO: Open call scheduler modal
+          }
+        },
+        {
+          label: 'Add Note',
+          onClick: () => {
+            toast.success(`Opening note editor for ${customer.name}`);
+            // TODO: Open note modal
+          }
+        },
+        {
+          label: 'View History',
+          onClick: () => {
+            toast.success(`Opening history for ${customer.name}`);
+            // TODO: Open history modal
+          }
+        },
+        {
+          label: 'Export Data',
+          onClick: () => {
+            toast.success(`Exporting data for ${customer.name}`);
+            // TODO: Trigger data export
+          }
+        },
+        {
+          label: 'Merge Customer',
+          onClick: () => {
+            toast.success(`Opening merge dialog for ${customer.name}`);
+            // TODO: Open merge modal
+          }
+        },
+        {
+          label: 'Archive Customer',
+          onClick: () => {
+            toast.success(`Archiving ${customer.name}`);
+            // TODO: Archive customer
+          }
+        }
       ];
-      const selectedOption = window.prompt(`Select an option for ${customer.name}:\n${options.map((opt, i) => `${i + 1}. ${opt}`).join('\n')}`);
-      if (selectedOption) {
-        toast.success(`${options[parseInt(selectedOption) - 1] || 'Option'} selected for ${customer.name}`);
-      }
+      
+      return options;
     }
+    return [];
   };
 
   return (
@@ -183,7 +224,7 @@ const CRMDashboard: React.FC = () => {
             </select>
             
             <button 
-              onClick={() => toast.info('Advanced filters panel would open here in a full implementation')}
+              onClick={() => toast('Advanced filters panel would open here in a full implementation')}
               className="p-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
               type="button"
               title="Advanced Filters"
@@ -277,13 +318,10 @@ const CRMDashboard: React.FC = () => {
                   >
                     <Edit className="h-4 w-4" />
                   </button>
-                  <button 
-                    onClick={() => handleMoreOptions(customer.id)}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
-                    type="button"
-                  >
-                    <MoreHorizontal className="h-4 w-4" />
-                  </button>
+                  <DropdownMenu
+                    options={handleMoreOptions(customer.id)}
+                    buttonClassName="text-gray-400 hover:text-gray-600 transition-colors"
+                  />
                 </div>
               </div>
             </div>

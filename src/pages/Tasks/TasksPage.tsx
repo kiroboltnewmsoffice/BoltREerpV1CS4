@@ -12,13 +12,13 @@ import {
   CheckCircle,
   Play,
   Eye,
-  Edit,
-  MoreHorizontal
+  Edit
 } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
 import { useAuthStore } from '../../store/authStore';
 import StatsCard from '../../components/Dashboard/StatsCard';
 import CreateTaskModal from '../../components/Modals/CreateTaskModal';
+import DropdownMenu from '../../components/DropdownMenu';
 import { format, isAfter, isBefore, addDays } from 'date-fns';
 
 const TasksPage: React.FC = () => {
@@ -96,19 +96,60 @@ const TasksPage: React.FC = () => {
     const task = tasks.find(t => t.id === taskId);
     if (task) {
       const options = [
-        'Duplicate Task',
-        'Change Priority',
-        'Reassign Task',
-        'Add Subtask',
-        'Set Reminder',
-        'Task History',
-        'Archive Task'
+        {
+          label: 'Duplicate Task',
+          onClick: () => {
+            toast.success(`Duplicating task "${task.title}"`);
+            // TODO: Implement task duplication
+          }
+        },
+        {
+          label: 'Change Priority',
+          onClick: () => {
+            toast.success(`Opening priority selector for "${task.title}"`);
+            // TODO: Open priority modal
+          }
+        },
+        {
+          label: 'Reassign Task',
+          onClick: () => {
+            toast.success(`Opening assignment for "${task.title}"`);
+            // TODO: Open reassignment modal
+          }
+        },
+        {
+          label: 'Add Subtask',
+          onClick: () => {
+            toast.success(`Adding subtask to "${task.title}"`);
+            // TODO: Open subtask modal
+          }
+        },
+        {
+          label: 'Set Reminder',
+          onClick: () => {
+            toast.success(`Setting reminder for "${task.title}"`);
+            // TODO: Open reminder modal
+          }
+        },
+        {
+          label: 'Task History',
+          onClick: () => {
+            toast.success(`Opening history for "${task.title}"`);
+            // TODO: Open history modal
+          }
+        },
+        {
+          label: 'Archive Task',
+          onClick: () => {
+            toast.success(`Archiving "${task.title}"`);
+            // TODO: Archive task
+          }
+        }
       ];
-      const selectedOption = window.prompt(`Select an option for "${task.title}":\n${options.map((opt, i) => `${i + 1}. ${opt}`).join('\n')}`);
-      if (selectedOption) {
-        toast.success(`${options[parseInt(selectedOption) - 1] || 'Option'} selected for task "${task.title}"`);
-      }
+      
+      return options;
     }
+    return [];
   };
 
   return (
@@ -315,13 +356,10 @@ const TasksPage: React.FC = () => {
                     >
                       <Edit className="h-4 w-4" />
                     </button>
-                    <button 
-                      onClick={() => handleMoreTaskOptions(task.id)}
-                      className="text-gray-400 hover:text-gray-600 transition-colors"
-                      type="button"
-                    >
-                      <MoreHorizontal className="h-4 w-4" />
-                    </button>
+                    <DropdownMenu
+                      options={handleMoreTaskOptions(task.id)}
+                      buttonClassName="text-gray-400 hover:text-gray-600 transition-colors"
+                    />
                   </div>
                 </div>
               </div>

@@ -12,13 +12,13 @@ import {
   DollarSign,
   FileText,
   Eye,
-  Edit,
-  MoreHorizontal
+  Edit
 } from 'lucide-react';
 import StatsCard from '../../components/Dashboard/StatsCard';
 import AddEmployeeModal from '../../components/Modals/AddEmployeeModal';
 import ViewEmployeeModal from '../../components/Modals/ViewEmployeeModal';
 import EditEmployeeModal from '../../components/Modals/EditEmployeeModal';
+import DropdownMenu from '../../components/DropdownMenu';
 import { formatCurrency } from '../../utils/currency';
 
 const HRDashboard: React.FC = () => {
@@ -146,6 +146,67 @@ const HRDashboard: React.FC = () => {
       setShowEditModal(true);
     }
   };
+
+  const handleMoreOptions = (employeeId: string) => {
+    const employee = employees.find(e => e.id === employeeId);
+    if (employee) {
+      const options = [
+        {
+          label: 'View Performance',
+          onClick: () => {
+            toast.success(`Opening performance review for ${employee.name}`);
+            // TODO: Open performance modal
+          }
+        },
+        {
+          label: 'Manage Leave',
+          onClick: () => {
+            toast.success(`Opening leave management for ${employee.name}`);
+            // TODO: Open leave modal
+          }
+        },
+        {
+          label: 'Update Salary',
+          onClick: () => {
+            toast.success(`Opening salary update for ${employee.name}`);
+            // TODO: Open salary modal
+          }
+        },
+        {
+          label: 'Training Records',
+          onClick: () => {
+            toast.success(`Opening training records for ${employee.name}`);
+            // TODO: Open training modal
+          }
+        },
+        {
+          label: 'Employee Report',
+          onClick: () => {
+            toast.success(`Generating report for ${employee.name}`);
+            // TODO: Generate report
+          }
+        },
+        {
+          label: 'Send Message',
+          onClick: () => {
+            toast.success(`Opening message composer for ${employee.name}`);
+            // TODO: Open message modal
+          }
+        },
+        {
+          label: 'Archive Employee',
+          onClick: () => {
+            toast.success(`Archiving ${employee.name}`);
+            // TODO: Archive employee
+          }
+        }
+      ];
+      
+      return options;
+    }
+    return [];
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -398,27 +459,10 @@ const HRDashboard: React.FC = () => {
                       >
                         <Edit className="h-4 w-4" />
                       </button>
-                      <button 
-                        onClick={() => {
-                          const options = [
-                            'View Performance',
-                            'Manage Leave',
-                            'Update Salary',
-                            'Training Records',
-                            'Employee Report',
-                            'Send Message',
-                            'Archive Employee'
-                          ];
-                          const selectedOption = window.prompt(`Select an option for ${employee.name}:\n${options.map((opt, i) => `${i + 1}. ${opt}`).join('\n')}`);
-                          if (selectedOption) {
-                            toast.success(`${options[parseInt(selectedOption) - 1] || 'Option'} selected for ${employee.name}`);
-                          }
-                        }}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
-                        type="button"
-                      >
-                        <MoreHorizontal className="h-4 w-4" />
-                      </button>
+                      <DropdownMenu
+                        options={handleMoreOptions(employee.id)}
+                        buttonClassName="text-gray-400 hover:text-gray-600 transition-colors"
+                      />
                     </div>
                   </td>
                 </tr>

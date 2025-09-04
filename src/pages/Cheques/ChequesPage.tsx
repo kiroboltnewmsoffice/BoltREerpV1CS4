@@ -12,13 +12,13 @@ import {
   XCircle,
   Eye,
   Edit,
-  Download,
-  MoreHorizontal
+  Download
 } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
 import StatsCard from '../../components/Dashboard/StatsCard';
 import AddChequeModal from '../../components/Modals/AddChequeModal';
 import ViewTransactionModal from '../../components/Modals/ViewTransactionModal';
+import DropdownMenu from '../../components/DropdownMenu';
 import { formatCurrency, formatCurrencyShort } from '../../utils/currency';
 import { format, isAfter, isBefore, addDays } from 'date-fns';
 
