@@ -1,2 +1,0 @@
-This is a test file to demonstrate Git workflow.
-Created on September 4, 2025.
