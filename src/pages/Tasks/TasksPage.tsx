@@ -11,7 +11,13 @@ import {
   AlertCircle,
   CheckCircle,
   Eye,
-  Edit
+  Edit,
+  Copy,
+  Flag,
+  UserPlus,
+  Bell,
+  FileText,
+  Archive
 } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
 import { useAuthStore } from '../../store/authStore';
@@ -147,49 +153,57 @@ const TasksPage: React.FC = () => {
           onClick: () => {
             toast.success(`Duplicating task "${task.title}"`);
             // TODO: Implement task duplication
-          }
+          },
+          icon: <Copy className="h-4 w-4" />
         },
         {
           label: 'Change Priority',
           onClick: () => {
             toast.success(`Opening priority selector for "${task.title}"`);
             // TODO: Open priority modal
-          }
+          },
+          icon: <Flag className="h-4 w-4" />
         },
         {
           label: 'Reassign Task',
           onClick: () => {
             toast.success(`Opening assignment for "${task.title}"`);
             // TODO: Open reassignment modal
-          }
+          },
+          icon: <UserPlus className="h-4 w-4" />
         },
         {
           label: 'Add Subtask',
           onClick: () => {
             toast.success(`Adding subtask to "${task.title}"`);
             // TODO: Open subtask modal
-          }
+          },
+          icon: <Plus className="h-4 w-4" />
         },
         {
           label: 'Set Reminder',
           onClick: () => {
             toast.success(`Setting reminder for "${task.title}"`);
             // TODO: Open reminder modal
-          }
+          },
+          icon: <Bell className="h-4 w-4" />
         },
         {
           label: 'Task History',
           onClick: () => {
             toast.success(`Opening history for "${task.title}"`);
             // TODO: Open history modal
-          }
+          },
+          icon: <FileText className="h-4 w-4" />
         },
         {
           label: 'Archive Task',
           onClick: () => {
             toast.success(`Archiving "${task.title}"`);
             // TODO: Archive task
-          }
+          },
+          icon: <Archive className="h-4 w-4" />,
+          className: 'text-red-600 dark:text-red-400'
         }
       ];
       

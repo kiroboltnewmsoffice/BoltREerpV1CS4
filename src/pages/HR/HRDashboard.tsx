@@ -156,49 +156,57 @@ const HRDashboard: React.FC = () => {
           onClick: () => {
             toast.success(`Opening performance review for ${employee.name}`);
             // TODO: Open performance modal
-          }
+          },
+          icon: <TrendingUp className="h-4 w-4" />
         },
         {
           label: 'Manage Leave',
           onClick: () => {
             toast.success(`Opening leave management for ${employee.name}`);
             // TODO: Open leave modal
-          }
+          },
+          icon: <Calendar className="h-4 w-4" />
         },
         {
           label: 'Update Salary',
           onClick: () => {
             toast.success(`Opening salary update for ${employee.name}`);
             // TODO: Open salary modal
-          }
+          },
+          icon: <DollarSign className="h-4 w-4" />
         },
         {
           label: 'Training Records',
           onClick: () => {
             toast.success(`Opening training records for ${employee.name}`);
             // TODO: Open training modal
-          }
+          },
+          icon: <Award className="h-4 w-4" />
         },
         {
           label: 'Employee Report',
           onClick: () => {
             toast.success(`Generating report for ${employee.name}`);
             // TODO: Generate report
-          }
+          },
+          icon: <FileText className="h-4 w-4" />
         },
         {
           label: 'Send Message',
           onClick: () => {
             toast.success(`Opening message composer for ${employee.name}`);
             // TODO: Open message modal
-          }
+          },
+          icon: <Users className="h-4 w-4" />
         },
         {
           label: 'Archive Employee',
           onClick: () => {
             toast.success(`Archiving ${employee.name}`);
             // TODO: Archive employee
-          }
+          },
+          icon: <FileText className="h-4 w-4" />,
+          className: 'text-red-600 dark:text-red-400'
         }
       ];
       

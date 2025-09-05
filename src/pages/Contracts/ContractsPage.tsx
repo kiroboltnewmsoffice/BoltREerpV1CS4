@@ -131,12 +131,12 @@ const ContractsPage: React.FC = () => {
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contract Actions</h3>
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">${contract.contractNumber} - ${customer?.name}</p>
           <div class="space-y-2">
-            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors" data-action="duplicate">📋 Duplicate Contract</button>
-            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors" data-action="send">📧 Send to Customer</button>
-            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors" data-action="print">🖨️ Print Contract</button>
-            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors" data-action="history">📊 Contract History</button>
-            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors" data-action="archive">📁 Archive Contract</button>
-            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors" data-action="terminate">❌ Terminate Contract</button>
+            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-900 dark:text-white" data-action="duplicate">📋 Duplicate Contract</button>
+            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-900 dark:text-white" data-action="send">📧 Send to Customer</button>
+            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-900 dark:text-white" data-action="print">🖨️ Print Contract</button>
+            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-900 dark:text-white" data-action="history">📊 Contract History</button>
+            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-900 dark:text-white" data-action="archive">📁 Archive Contract</button>
+            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-900 dark:text-white" data-action="terminate">❌ Terminate Contract</button>
           </div>
           <button class="w-full mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" data-action="close">Close</button>
         </div>

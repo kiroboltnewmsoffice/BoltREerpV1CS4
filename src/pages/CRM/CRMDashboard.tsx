@@ -12,7 +12,10 @@ import {
   DollarSign,
   TrendingUp,
   Eye,
-  Edit
+  Edit,
+  FileText,
+  Download,
+  StickyNote
 } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
 import StatsCard from '../../components/Dashboard/StatsCard';
@@ -89,35 +92,40 @@ const CRMDashboard: React.FC = () => {
           onClick: () => {
             toast.success(`Opening email composer for ${customer.name}`);
             // TODO: Open email modal
-          }
+          },
+          icon: <Mail className="h-4 w-4" />
         },
         {
           label: 'Schedule Call',
           onClick: () => {
             toast.success(`Opening call scheduler for ${customer.name}`);
             // TODO: Open call scheduler modal
-          }
+          },
+          icon: <Phone className="h-4 w-4" />
         },
         {
           label: 'Add Note',
           onClick: () => {
             toast.success(`Opening note editor for ${customer.name}`);
             // TODO: Open note modal
-          }
+          },
+          icon: <StickyNote className="h-4 w-4" />
         },
         {
           label: 'View History',
           onClick: () => {
             toast.success(`Opening history for ${customer.name}`);
             // TODO: Open history modal
-          }
+          },
+          icon: <FileText className="h-4 w-4" />
         },
         {
           label: 'Export Data',
           onClick: () => {
             toast.success(`Exporting data for ${customer.name}`);
             // TODO: Trigger data export
-          }
+          },
+          icon: <Download className="h-4 w-4" />
         },
         {
           label: 'Merge Customer',

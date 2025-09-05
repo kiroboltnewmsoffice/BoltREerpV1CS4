@@ -11,7 +11,14 @@ import {
   CheckCircle,
   XCircle,
   Eye,
-  Edit
+  Edit,
+  Lock,
+  Settings,
+  FileText,
+  Bell,
+  Download,
+  UserX,
+  Trash2
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import StatsCard from '../../components/Dashboard/StatsCard';
@@ -152,49 +159,58 @@ const UsersPage: React.FC = () => {
           onClick: () => {
             toast.success(`Password reset initiated for ${user.name}`);
             // TODO: Implement password reset
-          }
+          },
+          icon: <Lock className="h-4 w-4" />
         },
         {
           label: 'Change Permissions',
           onClick: () => {
             setSelectedUser(user);
             setShowPermissionsModal(true);
-          }
+          },
+          icon: <Settings className="h-4 w-4" />
         },
         {
           label: 'View Activity Log',
           onClick: () => {
             setSelectedUser(user);
             setShowActivityLogModal(true);
-          }
+          },
+          icon: <FileText className="h-4 w-4" />
         },
         {
           label: 'Send Notification',
           onClick: () => {
             setSelectedUser(user);
             setShowNotificationModal(true);
-          }
+          },
+          icon: <Bell className="h-4 w-4" />
         },
         {
           label: 'Export User Data',
           onClick: () => {
             toast.success(`Exporting data for ${user.name}`);
             // TODO: Export user data
-          }
+          },
+          icon: <Download className="h-4 w-4" />
         },
         {
           label: 'Suspend Account',
           onClick: () => {
             toast.error(`Suspending account for ${user.name}`);
             // TODO: Suspend user account
-          }
+          },
+          icon: <UserX className="h-4 w-4" />,
+          className: 'text-orange-600 dark:text-orange-400'
         },
         {
           label: 'Delete User',
           onClick: () => {
             toast.error(`Deleting user ${user.name}`);
             // TODO: Delete user with confirmation
-          }
+          },
+          icon: <Trash2 className="h-4 w-4" />,
+          className: 'text-red-600 dark:text-red-400'
         }
       ];
       
