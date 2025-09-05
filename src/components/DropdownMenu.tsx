@@ -75,7 +75,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                   className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center space-x-2 ${
                     option.disabled 
                       ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed' 
-                      : 'text-gray-700 dark:text-gray-300'
+                      : 'text-white dark:text-white'
                   } ${option.className || ''}`}
                   type="button"
                 >
